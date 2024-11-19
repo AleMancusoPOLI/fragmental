@@ -1,37 +1,40 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
-function Dropzone({ className }) {
-  const [file, setFile] = useState(null);
+function Dropzone({ onFileDrop, className }) {
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      if (acceptedFiles && acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        console.log(file);
 
-  const onDrop = useCallback((acceptedFile) => {
-    if (acceptedFile) {
-      console.log(acceptedFile);
-      setFile(acceptedFile);
-    } else {
-      console.log("Invalid format");
-    }
-  }, []);
+        const url = URL.createObjectURL(file);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onFileDrop(url); // Pass the file URL to the parent
+      } else {
+        console.log("Invalid format");
+      }
+    },
+    [onFileDrop]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: { "audio/*": [] },
     maxFiles: 1,
   });
 
   return (
-    <form>
-      <div
-        {...getRootProps({
-          className: className,
-        })}
-      >
-        <input {...getInputProps()} />
-        <div>Drop your sample here</div>
-      </div>
-    </form>
+    <div
+      {...getRootProps({
+        className: className,
+      })}
+    >
+      <input {...getInputProps()} />
+      <div>Drop your sample here</div>
+    </div>
   );
 }
 
