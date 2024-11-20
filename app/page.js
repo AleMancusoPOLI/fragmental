@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+
+// Import components
 import Dropzone from "./components/Dropzone";
-import Samplezone from "./components/Samplezone";
+import Player from "./components/Player";
+import Visualizer from "./components/Visualizer";
+import Granulizer from "./components/Granulizer";
 
 export default function Home() {
-  const [fileUrl, setFileUrl] = useState(null);
+  const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
+  const [wavesurferInstance, setWavesurferInstance] = useState(null); // Instance of the sample visualizer, used by Player to sync with Visualizer
 
   return (
     <section className="section">
@@ -14,15 +19,24 @@ export default function Home() {
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <Dropzone
-              onFileDrop={setFileUrl}
+              onFileDrop={setFileUrl} // when onFileDrop is called in Dropzone, then setFileUrl is called here with the same argument
               className="m-1 p-2 rounded border-2 border-solid"
             ></Dropzone>
-            {fileUrl && <Samplezone fileUrl={fileUrl} />}
+            <Visualizer
+              fileUrl={fileUrl}
+              onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
+            />
+            {wavesurferInstance && (
+              <Player
+                fileUrl={fileUrl}
+                wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
+              />
+            )}
             <p>Base parameters:</p>
-            <p>- mix</p>
             <p>- input/output gain</p>
             <p>- transpose</p>
             <p>Granulizer parameters</p>
+            <p>- mix</p>
             <p>- ?</p>
             <p>- ?</p>
           </div>

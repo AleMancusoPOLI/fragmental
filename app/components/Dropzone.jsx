@@ -6,13 +6,11 @@ import { useDropzone } from "react-dropzone";
 function Dropzone({ onFileDrop, className }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      if (acceptedFiles && acceptedFiles.length > 0) {
+      if (acceptedFiles && acceptedFiles.length == 1) {
         const file = acceptedFiles[0];
-        console.log(file);
 
         const url = URL.createObjectURL(file);
-
-        onFileDrop(url); // Pass the file URL to the parent
+        onFileDrop(url); // Pass the file URL to the page
       } else {
         console.log("Invalid format");
       }
@@ -22,8 +20,8 @@ function Dropzone({ onFileDrop, className }) {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: { "audio/*": [] },
-    maxFiles: 1,
+    accept: { "audio/*": [] }, // constraint on audio format
+    maxFiles: 1, // constraint on number of files at a time
   });
 
   return (
