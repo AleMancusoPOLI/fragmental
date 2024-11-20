@@ -17,6 +17,7 @@ function Visualizer({ fileUrl, onSampleReady }) {
         responsive: true,
         interact: false,
       });
+
       wavesurfer.load(fileUrl);
       wavesurfer.setMuted(true); // disable volume of the visualizer to avoid double audio source
 
@@ -26,9 +27,9 @@ function Visualizer({ fileUrl, onSampleReady }) {
       });
 
       // Restart playback when it finishes (loop)
-      wavesurfer.on("finish", () => {
-        wavesurfer.play();
-      });
+      //wavesurfer.on("finish", () => {
+      //  wavesurfer.play();
+      // });
 
       wavesurferRef.current = wavesurfer;
 
