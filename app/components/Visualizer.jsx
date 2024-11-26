@@ -13,7 +13,9 @@ function Visualizer({ fileUrl, onSampleReady }) {
       const wavesurfer = WaveSurfer.create({
         container: waveformContainerRef.current,
         waveColor: "#ddd",
-        progressColor: "#f76565",
+        progressColor: "#ddd",
+        cursorColor: "#800080",
+        cursorWidth: 5,
         responsive: true,
         interact: false,
       });

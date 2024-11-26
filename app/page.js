@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import Dropzone from "./components/Dropzone";
 import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
-import Granulizer from "./components/Granulizer";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
@@ -32,13 +31,6 @@ export default function Home() {
                 wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
               />
             )}
-            <p>Base parameters:</p>
-            <p>- input/output gain</p>
-            <p>- transpose</p>
-            <p>Granulizer parameters</p>
-            <p>- mix</p>
-            <p>- ?</p>
-            <p>- ?</p>
           </div>
         </div>
       </div>
