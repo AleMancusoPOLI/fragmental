@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import * as Tone from "tone";
 
 function Player({ fileUrl, wavesurferInstance }) {
@@ -13,11 +13,21 @@ function Player({ fileUrl, wavesurferInstance }) {
 
   const [intervalId, setIntervalId] = useState(null); // To control the playback interval
 
+  var debounce = require("lodash/debounce");
+
+  const debouncedInitializePlayers = useCallback(
+    debounce((url, grainNumber) => {
+      initializePlayers(url, grainNumber);
+    }, 500),
+    []
+  );
+
   // Initialize players when fileUrl or grains change
   useEffect(() => {
     if (!fileUrl) return;
+    console.log("URL or grain number changed");
     stopPlayback(); // limit! is it possible to keep playing while changing the grain number?
-    initializePlayers();
+    debouncedInitializePlayers(fileUrl, grains);
 
     return () => {
       // Dispose players on cleanup
@@ -26,17 +36,19 @@ function Player({ fileUrl, wavesurferInstance }) {
   }, [fileUrl, grains]);
 
   // Initialize players and connect to destination
-  async function initializePlayers() {
+  async function initializePlayers(url, grainNumber) {
+    console.log("Initializing players...", grainNumber);
     // Intermediate function is need to have an async block
-    const grainPlayers = await createGrainPlayers(fileUrl, grains);
+    const grainPlayers = await createGrainPlayers(url, grainNumber);
 
     // Connect all players to the audio context's destination
     grainPlayers.forEach((player) => player.toDestination());
     setPlayers(grainPlayers);
+    console.log("Players ready!");
   }
 
   // Create players for all grains
-  const createGrainPlayers = async (url, grainCount) => {
+  const createGrainPlayers = async (url, grainNumber) => {
     const grainPlayers = [];
     const audioContext = Tone.getContext();
 
@@ -46,10 +58,10 @@ function Player({ fileUrl, wavesurferInstance }) {
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
     // Compute the exact interval between every grain
-    const grainDuration = audioBuffer.duration / grainCount;
+    const grainDuration = audioBuffer.duration / grainNumber;
 
     // Configure each player for its grain
-    for (let i = 0; i < grainCount; i++) {
+    for (let i = 0; i < grainNumber; i++) {
       // Start and end positions of the specific grain on the audio buffer
       const start = i * grainDuration;
       const end = start + grainDuration;
@@ -75,7 +87,7 @@ function Player({ fileUrl, wavesurferInstance }) {
       const grain = players[randomIndex];
 
       grain.start(Tone.now());
-      // cut after suration specified by the user (PROBLEM: does not automatically update while playing)
+      // cut after duration specified by the user (PROBLEM: does not automatically update while playing)
       grain.stop(Tone.now() + duration / 1000);
     }
   };
