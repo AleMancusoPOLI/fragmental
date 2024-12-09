@@ -3,6 +3,8 @@ import * as Tone from "tone";
 import { log } from "tone/build/esm/core/util/Debug";
 
 function Player({ fileUrl, wavesurferInstance }) {
+  // the first argument is the current state, the second - function to update the argument
+  // useState(arg), arg is the initial state
   const [isPlaying, setIsPlaying] = useState(false); // Boolean for the play/pause button
 
   const [players, setPlayers] = useState([]); // Array of players, one for each grain
@@ -14,6 +16,7 @@ function Player({ fileUrl, wavesurferInstance }) {
 
   const [intervalId, setIntervalId] = useState(null); // To control the playback interval
 
+  //initializePlayers is invoked only after the user stops making changes for at least 500ms
   var debounce = require("lodash/debounce");
 
   const debouncedInitializePlayers = useCallback(
@@ -25,16 +28,19 @@ function Player({ fileUrl, wavesurferInstance }) {
 
   // Initialize players when fileUrl or grains change
   useEffect(() => {
+    // Side effect logic
     if (!fileUrl) return;
     console.log("URL or grain number changed");
     stopPlayback(); // limit! is it possible to keep playing while changing the grain number?
     debouncedInitializePlayers(fileUrl, grains);
+    //initializePlayers(fileUrl, grains);
 
+    // Cleanup logic
     return () => {
       // Dispose players on cleanup
       players.forEach((player) => player.dispose());
     };
-  }, [fileUrl, grains]);
+  }, [fileUrl, grains]); //dependencies 
 
   // Initialize players and connect to destination
   async function initializePlayers(url, grainNumber) {
