@@ -38,7 +38,7 @@ function Player({ fileUrl, wavesurferInstance }) {
   // Create players for all grains
   const createGrainPlayers = async (url, grainCount) => {
     const grainPlayers = [];
-    const audioContext = Tone.context; // deprecated! But didn't find any better way to do it
+    const audioContext = Tone.getContext();
 
     // Fetch and decode the audio file
     const response = await fetch(url);
@@ -130,30 +130,33 @@ function Player({ fileUrl, wavesurferInstance }) {
         </button>
       </div>
       <div>
-        <p>Grain number:</p>
+        <p>Grain number: {grains}</p>
         <input
-          type="number"
+          type="range"
           value={grains}
           onChange={(e) => setGrains(Number(e.target.value))}
           min="1"
+          max="100"
         />
       </div>
       <div>
-        <p>Playback rate (ms):</p>
+        <p>Playback rate (ms): {rate}</p>
         <input
-          type="number"
+          type="range"
           value={rate}
           onChange={(e) => setRate(Number(e.target.value))}
           min="100"
+          max="1000"
         />
       </div>
       <div>
-        <p>Duration (ms):</p>
+        <p>Duration (ms): {duration}</p>
         <input
-          type="number"
+          type="range"
           value={duration}
           onChange={(e) => setDuration(Number(e.target.value))}
           min="1"
+          max="1000"
         />
       </div>
     </section>
