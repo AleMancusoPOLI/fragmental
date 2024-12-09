@@ -1,6 +1,8 @@
 Run the development server:
 
 ```bash
+npm install next react react-dom
+
 npm run dev
 ```
 

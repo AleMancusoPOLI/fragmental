@@ -75,7 +75,7 @@ function Player({ fileUrl, wavesurferInstance }) {
       const grain = players[randomIndex];
 
       grain.start(Tone.now());
-      // cut after suration specified by the user (PROBLEM: does not automatically update while playing)
+      // cut after duration specified by the user (PROBLEM: does not automatically update while playing)
       grain.stop(Tone.now() + duration / 1000);
     }
   };
