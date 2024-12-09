@@ -1,4 +1,4 @@
-1. Simple knobs
+1. simple knobs
     - probability (Margo)
     - pitch shifting 
     - gain 
