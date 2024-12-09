@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as Tone from "tone";
+import { log } from "tone/build/esm/core/util/Debug";
 
 function Player({ fileUrl, wavesurferInstance }) {
   const [isPlaying, setIsPlaying] = useState(false); // Boolean for the play/pause button
@@ -27,7 +28,7 @@ function Player({ fileUrl, wavesurferInstance }) {
 
   // Initialize players and connect to destination
   async function initializePlayers() {
-    // Intermediate function is need to have an async block
+    // Intermediate function is needed to have an async block
     const grainPlayers = await createGrainPlayers(fileUrl, grains);
 
     // Connect all players to the audio context's destination
@@ -44,6 +45,9 @@ function Player({ fileUrl, wavesurferInstance }) {
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+    console.log(audioBuffer);
+
 
     // Compute the exact interval between every grain
     const grainDuration = audioBuffer.duration / grainCount;
