@@ -13,7 +13,11 @@ function Player({ fileUrl, wavesurferInstance }) {
   const [rate, setRate] = useState(500); // Rate in milliseconds
   const [duration, setDuration] = useState(500); // Duration in milliseconds
   const [intervalId, setIntervalId] = useState(null); // To control the playback interval
-  const [probability, setProbability] = useState(0); // The probability of playing a grain 
+  const [probability, setProbability] = useState(0); // The probability of playing a grain
+  // For the audio recording
+  const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
+  const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
+  const [isRecording, setIsRecording] = useState(false); //For saving the recording state
 
   //initializePlayers is invoked only after the user stops making changes for at least 500ms
   var debounce = require("lodash/debounce");
@@ -37,6 +41,8 @@ function Player({ fileUrl, wavesurferInstance }) {
     return () => {
       // Dispose players on cleanup
       players.forEach((player) => player.dispose());
+      // dispose recorder 
+      if (recorder) recorder.dispose(); 
     };
   }, [fileUrl, grains]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
@@ -46,10 +52,20 @@ function Player({ fileUrl, wavesurferInstance }) {
     // Intermediate function is need to have an async block
     const grainPlayers = await createGrainPlayers(url, grainNumber, probability);
 
-    // Connect all players to the audio context's destination
-    grainPlayers.forEach((player) => player.toDestination());
+    // Creating and connecting the recording instance
+    const recorderInstance = new Tone.Recorder();
+    grainPlayers.forEach(
+      (player) => {
+        player.connect(recorderInstance); // Connecting to the recorder
+        player.toDestination(); // Connecting to the output speakers
+    });
+    // Set players and recoder
     setPlayers(grainPlayers);
-    console.log("Players ready!");
+    setRecorder(recorderInstance);
+
+    // logs 
+    console.log("Players're ready!");
+    console.log("Recoder's ready!");
   }
 
   // Create players for all grains
@@ -127,6 +143,29 @@ function Player({ fileUrl, wavesurferInstance }) {
     }
   };
 
+  // Start the recording 
+  const startRecording = async () => {
+    if (recorder && !isRecording) {
+      await Tone.start();
+      recorder.start();
+      setIsRecording(true);
+      console.log("Recording started...");
+    }
+  };
+
+  // Stop the recording and save the url of the recording
+  const stopRecording = async () => {
+    if (recorder && isRecording) {
+      const recording = await recorder.stop();
+      const audioBlob = new Blob([recording], { type: "audio/wav" });
+      const audioURL = URL.createObjectURL(audioBlob);
+      setRecordedAudioURL(audioURL);
+      setIsRecording(false);
+      console.log("Recording stopped. Audio available at:", audioURL);
+    }
+  };
+
+
   // HTML
   return (
     <section>
@@ -191,6 +230,17 @@ function Player({ fileUrl, wavesurferInstance }) {
           step={0.1}
         />
       </div>
+      <div>
+        <button onClick={isRecording ? stopRecording : startRecording}>
+          {isRecording ? "Stop Recording" : "Start Recording"}
+        </button>
+      </div>
+      {recordedAudioURL && ( // checking if recordedAudioURL exists 
+        <div>
+          <p>Recording completed. <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav">Download the result</a></p>
+          <audio controls src={recordedAudioURL}></audio>
+        </div>
+      )}
     </section>
   );
 }
