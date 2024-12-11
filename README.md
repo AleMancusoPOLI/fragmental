@@ -1,8 +1,10 @@
+Install the necessary dependencies (if needed):
+```bash
+npm install next react react-dom
+```
 Run the development server:
 
 ```bash
-npm install next react react-dom
-
 npm run dev
 ```
 
