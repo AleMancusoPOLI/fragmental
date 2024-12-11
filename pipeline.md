@@ -14,3 +14,4 @@
 
 ----
 to fix the performance
+to add info panels on hover
