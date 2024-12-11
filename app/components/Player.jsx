@@ -6,20 +6,26 @@ function Player({ fileUrl, wavesurferInstance }) {
   // useState(arg), arg is the initial state
 
   const [isPlaying, setIsPlaying] = useState(false); // Boolean for the play/pause button
+
   const [players, setPlayers] = useState([]); // Array of players, one for each grain
+  const [gainNode, setGainNode] = useState(null);
+  const [pitchNode, setPitchNode] = useState(null);
+
   const [position, setPosition] = useState(0); // Start position
   const [grains, setGrains] = useState(10); // Number of grains
+  const [gain, setGain] = useState(1);
+  const [pitch, setPitch] = useState(0);
   const [rate, setRate] = useState(500); // Rate in milliseconds
   const [duration, setDuration] = useState(500); // Duration in milliseconds
   const [loop, setLoop] = useState(null); // To control the loop
   const [probability, setProbability] = useState(1); // The probability of playing a grain
-  const [intervalId, setIntervalId] = useState(null); // To control the playback interval
+
   // For the audio recording
   const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
   const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
   const [isRecording, setIsRecording] = useState(false); //For saving the recording state
 
-  //initializePlayers is invoked only after the user stops making changes for at least 500ms
+  //initializePlayers is invoked only after the user stops making changes for at least 200ms
   var debounce = require("lodash/debounce");
 
   const debouncedInitializePlayers = useCallback(
@@ -69,8 +75,8 @@ function Player({ fileUrl, wavesurferInstance }) {
     return () => {
       // Dispose players on cleanup
       players.forEach((player) => player.dispose());
-      // dispose recorder 
-      if (recorder) recorder.dispose(); 
+      // dispose recorder
+      if (recorder) recorder.dispose();
     };
   }, [fileUrl, grains]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
@@ -92,24 +98,34 @@ function Player({ fileUrl, wavesurferInstance }) {
     debouncedUpdateProbability(probability, loop);
   }, [probability]);
 
+  const initNodes = async () => {
+    const g = new Tone.Gain(gain).toDestination();
+    const p = new Tone.PitchShift();
+    setGainNode(g);
+    setPitchNode(p);
+    return [g, p];
+  };
+
   // Initialize players and connect to destination
   async function initializePlayers(url, grainNumber) {
     console.log("Initializing players...", grainNumber);
+
+    const [g, p] = await initNodes();
+
     // Intermediate function is need to have an async block
     const grainPlayers = await createGrainPlayers(url, grainNumber);
 
     // Creating and connecting the recording instance
     const recorderInstance = new Tone.Recorder();
-    grainPlayers.forEach(
-      (player) => {
-        player.connect(recorderInstance); // Connecting to the recorder
-        player.toDestination(); // Connecting to the output speakers
+    grainPlayers.forEach((player) => {
+      player.connect(recorderInstance); // Connecting to the recorder
+      player.chain(p, g); // Connecting to the nodes
     });
     // Set players and recoder
     setPlayers(grainPlayers);
     setRecorder(recorderInstance);
 
-    // logs 
+    // logs
     console.log("Players're ready!");
     console.log("Recoder's ready!");
   }
@@ -193,7 +209,7 @@ function Player({ fileUrl, wavesurferInstance }) {
     }
   };
 
-  // Start the recording 
+  // Start the recording
   const startRecording = async () => {
     if (recorder && !isRecording) {
       await Tone.start();
@@ -214,7 +230,6 @@ function Player({ fileUrl, wavesurferInstance }) {
       console.log("Recording stopped. Audio available at:", audioURL);
     }
   };
-
 
   // HTML
   return (
@@ -238,6 +253,34 @@ function Player({ fileUrl, wavesurferInstance }) {
         <button onClick={isPlaying ? stopPlayback : startPlayback}>
           {isPlaying ? "Stop" : "Play"}
         </button>
+      </div>
+      <div>
+        <p>Gain: {gain}</p>
+        <input
+          type="range"
+          value={gain}
+          onChange={(e) => {
+            setGain(Number(e.target.value));
+            gainNode.gain.rampTo(e.target.value, 0.01);
+          }}
+          min="0"
+          max="2"
+          step="0.1"
+        />
+      </div>
+      <div>
+        <p>Pitch: {pitch}</p>
+        <input
+          type="range"
+          value={pitch}
+          onChange={(e) => {
+            setPitch(Number(e.target.value));
+            pitchNode.pitch = e.target.value;
+          }}
+          min="-12"
+          max="12"
+          step="1"
+        />
       </div>
       <div>
         <p>Grain number: {grains}</p>
@@ -285,9 +328,19 @@ function Player({ fileUrl, wavesurferInstance }) {
           {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
       </div>
-      {recordedAudioURL && ( // checking if recordedAudioURL exists 
+      {recordedAudioURL && ( // checking if recordedAudioURL exists
         <div>
-          <p>Recording completed. <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav">Download the result</a></p>
+          <p>
+            Recording completed.{" "}
+            <a
+              href={recordedAudioURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              download="recording.wav"
+            >
+              Download the result
+            </a>
+          </p>
           <audio controls src={recordedAudioURL}></audio>
         </div>
       )}
