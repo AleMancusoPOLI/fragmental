@@ -14,7 +14,6 @@ function Player({ fileUrl, wavesurferInstance }) {
   const [loop, setLoop] = useState(null); // To control the loop
   const [probability, setProbability] = useState(1); // The probability of playing a grain
   const [intervalId, setIntervalId] = useState(null); // To control the playback interval
-  const [probability, setProbability] = useState(0); // The probability of playing a grain
   // For the audio recording
   const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
   const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
