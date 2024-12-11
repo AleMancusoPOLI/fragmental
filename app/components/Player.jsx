@@ -51,20 +51,6 @@ function Player({ fileUrl, wavesurferInstance }) {
     setPlayers(grainPlayers);
     console.log("Players ready!");
   }
-  
-  // // For the calculation of the grain probability
-  // const compareProbs = (probability, grainNumber) => {
-  //   var killIndex; 
-  //   if (probability > Math.random()){
-  //     // get the id of the player which we want to mute (kill) 
-  //     killIndex = Math.random() * (grainNumber - 1);
-  //   }
-  //   else {
-  //     //leave the grain as it is
-  //     killIndex = null;
-  //   } 
-  //   return killIndex;
-  // }
 
   // Create players for all grains
   const createGrainPlayers = async (url, grainNumber, probability) => {
