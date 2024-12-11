@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import * as Tone from "tone";
-import { log } from "tone/build/esm/core/util/Debug";
 
 function Player({ fileUrl, wavesurferInstance }) {
   // the first argument is the current state, the second - function to update the argument
@@ -12,8 +11,8 @@ function Player({ fileUrl, wavesurferInstance }) {
   const [grains, setGrains] = useState(10); // Number of grains
   const [rate, setRate] = useState(500); // Rate in milliseconds
   const [duration, setDuration] = useState(500); // Duration in milliseconds
-  const [intervalId, setIntervalId] = useState(null); // To control the playback interval
-  const [probability, setProbability] = useState(0); // The probability of playing a grain 
+  const [loop, setLoop] = useState(null); // To control the loop
+  const [probability, setProbability] = useState(1); // The probability of playing a grain
 
   //initializePlayers is invoked only after the user stops making changes for at least 500ms
   var debounce = require("lodash/debounce");
@@ -21,7 +20,35 @@ function Player({ fileUrl, wavesurferInstance }) {
   const debouncedInitializePlayers = useCallback(
     debounce((url, grainNumber) => {
       initializePlayers(url, grainNumber);
-    }, 500),
+    }, 200),
+    []
+  );
+
+  const debouncedUpdateRate = useCallback(
+    debounce((rate, loop) => {
+      console.log("Changing rate...", rate / 1000);
+      if (loop) {
+        loop.interval = rate / 1000; // Update loop interval
+      }
+    }, 200),
+    []
+  );
+
+  const debouncedUpdateDuration = useCallback(
+    debounce((duration, loop) => {
+      console.log("Changing duration...", duration / 1000);
+      // TO-DO
+    }, 200),
+    []
+  );
+
+  const debouncedUpdateProbability = useCallback(
+    debounce((probability, loop) => {
+      console.log("Changing probability...", probability);
+      if (loop) {
+        loop.probability = probability; // Update loop interval
+      }
+    }, 200),
     []
   );
 
@@ -40,11 +67,29 @@ function Player({ fileUrl, wavesurferInstance }) {
     };
   }, [fileUrl, grains]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
+  // Update loop interval dynamically when rate changes
+  useEffect(() => {
+    console.log("Rate value changed");
+    debouncedUpdateRate(rate, loop);
+  }, [rate]);
+
+  // Update loop callback dynamically when duration changes
+  useEffect(() => {
+    console.log("Duration value changed");
+    debouncedUpdateDuration(duration, loop);
+  }, [duration]);
+
+  // Update loop interval dynamically when rate changes
+  useEffect(() => {
+    console.log("Probability value changed");
+    debouncedUpdateProbability(probability, loop);
+  }, [probability]);
+
   // Initialize players and connect to destination
   async function initializePlayers(url, grainNumber) {
     console.log("Initializing players...", grainNumber);
     // Intermediate function is need to have an async block
-    const grainPlayers = await createGrainPlayers(url, grainNumber, probability);
+    const grainPlayers = await createGrainPlayers(url, grainNumber);
 
     // Connect all players to the audio context's destination
     grainPlayers.forEach((player) => player.toDestination());
@@ -53,7 +98,7 @@ function Player({ fileUrl, wavesurferInstance }) {
   }
 
   // Create players for all grains
-  const createGrainPlayers = async (url, grainNumber, probability) => {
+  const createGrainPlayers = async (url, grainNumber) => {
     const grainPlayers = [];
     const audioContext = Tone.getContext();
 
@@ -69,35 +114,32 @@ function Player({ fileUrl, wavesurferInstance }) {
 
     // Configure each player for its grain
     for (let i = 0; i < grainNumber; i++) {
-      if (probability < Math.random()) { // Skipping grains that don't meet the probability value
-          // Start and end positions of the specific grain on the audio buffer
-          const start = i * grainDuration;
-          const end = start + grainDuration;
+      // Start and end positions of the specific grain on the audio buffer
+      const start = i * grainDuration;
+      const end = start + grainDuration;
 
-          const player = new Tone.Player({
-            url,
-            loop: false,
-            onload: () => {
-              // Every grain buffer is the whole buffer sliced from start to end
-              player.buffer = player.buffer.slice(start, end);
-            },
-          });
-          grainPlayers.push(player); // add player to the array
-      }  
+      const player = new Tone.Player({
+        url,
+        loop: false,
+        onload: () => {
+          // Every grain buffer is the whole buffer sliced from start to end
+          player.buffer = player.buffer.slice(start, end);
+        },
+      });
+      grainPlayers.push(player); // add player to the array
     }
 
     return grainPlayers;
   };
 
   // Play a random grain (TO BE EDITED TO PLAY A GRAIN BASED ON SLIDER POSITION)
-  const playGrain = () => {
+  const playGrain = (duration) => {
     if (players.length > 0) {
       const randomIndex = Math.floor(Math.random() * players.length);
       const grain = players[randomIndex];
 
       grain.start(Tone.now());
-      // cut after duration specified by the user (PROBLEM: does not automatically update while playing)
-      grain.stop(Tone.now() + duration / 1000);
+      grain.stop(Tone.now() + duration / 1000); // Stop based on updated duration
     }
   };
 
@@ -106,12 +148,16 @@ function Player({ fileUrl, wavesurferInstance }) {
     if (!isPlaying) {
       setIsPlaying(true);
 
-      // Play a random grain every `rate` milliseconds
-      const id = setInterval(() => {
-        playGrain();
-      }, rate);
+      // Create a loop for playing grains
+      const newLoop = new Tone.Loop((time) => {
+        playGrain(duration);
+      }, rate / 1000); // Initial interval based on rate
+      newLoop.probability = probability;
+      // Store loop instance
+      newLoop.start(0);
+      setLoop(newLoop);
 
-      setIntervalId(id);
+      Tone.getTransport().start();
     }
   };
 
@@ -119,8 +165,11 @@ function Player({ fileUrl, wavesurferInstance }) {
   const stopPlayback = () => {
     if (isPlaying) {
       setIsPlaying(false);
-      clearInterval(intervalId);
-      setIntervalId(null);
+      if (loop) {
+        loop.stop();
+      }
+      Tone.getTransport().stop();
+      setLoop(null);
 
       // Stop all grains to end sound
       players.forEach((player) => player.stop());
@@ -145,7 +194,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           }}
         ></input>
       </div>
-      <div>
+      <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
         <button onClick={isPlaying ? stopPlayback : startPlayback}>
           {isPlaying ? "Stop" : "Play"}
         </button>
@@ -176,7 +225,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           type="range"
           value={duration}
           onChange={(e) => setDuration(Number(e.target.value))}
-          min="1"
+          min="10"
           max="1000"
         />
       </div>
@@ -188,7 +237,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           onChange={(e) => setProbability(Number(e.target.value))}
           min={0}
           max={1}
-          step={0.1}
+          step={0.01}
         />
       </div>
     </section>
