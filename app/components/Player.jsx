@@ -1,34 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import * as Tone from "tone";
+import debounce from "lodash/debounce";
+
+// importing components of the app
+import usePlayerState from "../usePlayerState";
+import { initializePlayers, playGrain, startPlayback, stopPlayback } from "../playerFunctions";
+import { startRecording, stopRecording } from "../recordingFunctions";
+import Slider from "./Slider"
 
 function Player({ fileUrl, wavesurferInstance }) {
-  // the first argument is the current state, the second - function to update the argument
-  // useState(arg), arg is the initial state
 
-  const [isPlaying, setIsPlaying] = useState(false); // Boolean for the play/pause button
-  const [players, setPlayers] = useState([]); // Array of players, one for each grain
-  const [position, setPosition] = useState(0); // Start position
-  const [grains, setGrains] = useState(10); // Number of grains
-  const [rate, setRate] = useState(500); // Rate in milliseconds
-  const [duration, setDuration] = useState(500); // Duration in milliseconds
-  const [loop, setLoop] = useState(null); // To control the loop
-  const [probability, setProbability] = useState(1); // The probability of playing a grain
-  const [intervalId, setIntervalId] = useState(null); // To control the playback interval
-  // For the audio recording
-  const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
-  const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
-  const [isRecording, setIsRecording] = useState(false); //For saving the recording state
+  const { state, setters } = usePlayerState();
+  const { isPlaying, players, position, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording } = state;
+  const { setIsPlaying, setPlayers, setPosition, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording} = setters;
 
-  //initializePlayers is invoked only after the user stops making changes for at least 500ms
-  var debounce = require("lodash/debounce");
-
-  const debouncedInitializePlayers = useCallback(
+  const debouncedInitializePlayers = useCallback( 
     debounce((url, grainNumber) => {
-      initializePlayers(url, grainNumber);
-    }, 200),
-    []
+        initializePlayers(url, grainNumber, setPlayers, setRecorder );
+      }, 200),
+      []
   );
-
+  
   const debouncedUpdateRate = useCallback(
     debounce((rate, loop) => {
       console.log("Changing rate...", rate / 1000);
@@ -72,149 +64,25 @@ function Player({ fileUrl, wavesurferInstance }) {
       // dispose recorder 
       if (recorder) recorder.dispose(); 
     };
-  }, [fileUrl, grains]); //dependencies (if provided, the effect runs whenever one of those values changes)
+  }, [fileUrl, grains, debouncedInitializePlayers]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
   // Update loop interval dynamically when rate changes
   useEffect(() => {
     console.log("Rate value changed");
     debouncedUpdateRate(rate, loop);
-  }, [rate]);
+  }, [rate, debouncedUpdateRate]);
 
   // Update loop callback dynamically when duration changes
   useEffect(() => {
     console.log("Duration value changed");
     debouncedUpdateDuration(duration, loop);
-  }, [duration]);
+  }, [duration, debouncedUpdateDuration]);
 
   // Update loop interval dynamically when rate changes
   useEffect(() => {
     console.log("Probability value changed");
     debouncedUpdateProbability(probability, loop);
-  }, [probability]);
-
-  // Initialize players and connect to destination
-  async function initializePlayers(url, grainNumber) {
-    console.log("Initializing players...", grainNumber);
-    // Intermediate function is need to have an async block
-    const grainPlayers = await createGrainPlayers(url, grainNumber);
-
-    // Creating and connecting the recording instance
-    const recorderInstance = new Tone.Recorder();
-    grainPlayers.forEach(
-      (player) => {
-        player.connect(recorderInstance); // Connecting to the recorder
-        player.toDestination(); // Connecting to the output speakers
-    });
-    // Set players and recoder
-    setPlayers(grainPlayers);
-    setRecorder(recorderInstance);
-
-    // logs 
-    console.log("Players're ready!");
-    console.log("Recoder's ready!");
-  }
-
-  // Create players for all grains
-  const createGrainPlayers = async (url, grainNumber) => {
-    const grainPlayers = [];
-    const audioContext = Tone.getContext();
-
-    // Fetch and decode the audio file
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-    console.log(audioBuffer);
-
-    // Compute the exact interval between every grain
-    const grainDuration = audioBuffer.duration / grainNumber;
-
-    // Configure each player for its grain
-    for (let i = 0; i < grainNumber; i++) {
-      // Start and end positions of the specific grain on the audio buffer
-      const start = i * grainDuration;
-      const end = start + grainDuration;
-
-      const player = new Tone.Player({
-        url,
-        loop: false,
-        onload: () => {
-          // Every grain buffer is the whole buffer sliced from start to end
-          player.buffer = player.buffer.slice(start, end);
-        },
-      });
-      grainPlayers.push(player); // add player to the array
-    }
-
-    return grainPlayers;
-  };
-
-  // Play a random grain (TO BE EDITED TO PLAY A GRAIN BASED ON SLIDER POSITION)
-  const playGrain = (duration) => {
-    if (players.length > 0) {
-      const randomIndex = Math.floor(Math.random() * players.length);
-      const grain = players[randomIndex];
-
-      grain.start(Tone.now());
-      grain.stop(Tone.now() + duration / 1000); // Stop based on updated duration
-    }
-  };
-
-  // Start playback at the specified rate
-  const startPlayback = () => {
-    if (!isPlaying) {
-      setIsPlaying(true);
-
-      // Create a loop for playing grains
-      const newLoop = new Tone.Loop((time) => {
-        playGrain(duration);
-      }, rate / 1000); // Initial interval based on rate
-      newLoop.probability = probability;
-      // Store loop instance
-      newLoop.start(0);
-      setLoop(newLoop);
-
-      Tone.getTransport().start();
-    }
-  };
-
-  // Stop playback
-  const stopPlayback = () => {
-    if (isPlaying) {
-      setIsPlaying(false);
-      if (loop) {
-        loop.stop();
-      }
-      Tone.getTransport().stop();
-      setLoop(null);
-
-      // Stop all grains to end sound
-      players.forEach((player) => player.stop());
-    }
-  };
-
-  // Start the recording 
-  const startRecording = async () => {
-    if (recorder && !isRecording) {
-      await Tone.start();
-      recorder.start();
-      setIsRecording(true);
-      console.log("Recording started...");
-    }
-  };
-
-  // Stop the recording and save the url of the recording
-  const stopRecording = async () => {
-    if (recorder && isRecording) {
-      const recording = await recorder.stop();
-      const audioBlob = new Blob([recording], { type: "audio/wav" });
-      const audioURL = URL.createObjectURL(audioBlob);
-      setRecordedAudioURL(audioURL);
-      setIsRecording(false);
-      console.log("Recording stopped. Audio available at:", audioURL);
-    }
-  };
-
+  }, [probability, debouncedUpdateProbability]);
 
   // HTML
   return (
@@ -235,62 +103,35 @@ function Player({ fileUrl, wavesurferInstance }) {
         ></input>
       </div>
       <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
-        <button onClick={isPlaying ? stopPlayback : startPlayback}>
-          {isPlaying ? "Stop" : "Play"}
-        </button>
+      {/* onClick expects a function reference, not the result of calling a function (that's why we use anonymus function) */}
+            <button onClick={() => 
+              isPlaying ? stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players) : startPlayback(isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration)}>
+                {isPlaying ? "Stop" : "Play"}
+            </button>
       </div>
+      
+      <section>
+        <h3>Playback Controls</h3>
+        <Slider label="Grain number" value={grains} onChange={setGrains} min={5} max={100} />
+        <Slider label="Playback rate (ms)" value={rate} onChange={setRate} min={100} max={1000} />
+        <Slider label="Duration (ms)" value={duration} onChange={setDuration} min={10} max={1000} />
+        <Slider label="Probability" value={probability} onChange={setProbability} min={0} max={1} step={0.01} />
+      </section>
+
       <div>
-        <p>Grain number: {grains}</p>
-        <input
-          type="range"
-          value={grains}
-          onChange={(e) => setGrains(Number(e.target.value))}
-          min="5"
-          max="100"
-        />
-      </div>
-      <div>
-        <p>Playback rate (ms): {rate}</p>
-        <input
-          type="range"
-          value={rate}
-          onChange={(e) => setRate(Number(e.target.value))}
-          min="100"
-          max="1000"
-        />
-      </div>
-      <div>
-        <p>Duration (ms): {duration}</p>
-        <input
-          type="range"
-          value={duration}
-          onChange={(e) => setDuration(Number(e.target.value))}
-          min="10"
-          max="1000"
-        />
-      </div>
-      <div>
-        <p>Probability: {probability}</p>
-        <input
-          type="range"
-          value={probability}
-          onChange={(e) => setProbability(Number(e.target.value))}
-          min={0}
-          max={1}
-          step={0.01}
-        />
-      </div>
-      <div>
-        <button onClick={isRecording ? stopRecording : startRecording}>
+        <button onClick={() => 
+          isRecording ? stopRecording(recorder, isRecording, setIsRecording, setRecordedAudioURL) : startRecording(recorder, isRecording, setIsRecording)}>
           {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
-      </div>
-      {recordedAudioURL && ( // checking if recordedAudioURL exists 
-        <div>
-          <p>Recording completed. <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav">Download the result</a></p>
-          <audio controls src={recordedAudioURL}></audio>
         </div>
-      )}
+          { recordedAudioURL && ( // checking if recordedAudioURL exists 
+        <div>
+            <p>Recording completed.
+              <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav"> Download the result</a>
+            </p>
+            <audio controls src={recordedAudioURL}></audio>
+        </div>
+        )}
     </section>
   );
 }
