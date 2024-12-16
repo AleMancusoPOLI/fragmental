@@ -12,15 +12,15 @@ function Player({ fileUrl, wavesurferInstance }) {
 
   const { state, setters } = usePlayerState();
   const { isPlaying, players, position, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording } = state;
-  const { setIsPlaying, setPlayers, setPosition, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording} = setters;
+  const { setIsPlaying, setPlayers, setPosition, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording } = setters;
 
-  const debouncedInitializePlayers = useCallback( 
+  const debouncedInitializePlayers = useCallback(
     debounce((url, grainNumber) => {
-        initializePlayers(url, grainNumber, setPlayers, setRecorder );
-      }, 200),
-      []
+      initializePlayers(url, grainNumber, setPlayers, setRecorder);
+    }, 200),
+    []
   );
-  
+
   const debouncedUpdateRate = useCallback(
     debounce((rate, loop) => {
       console.log("Changing rate...", rate / 1000);
@@ -103,13 +103,28 @@ function Player({ fileUrl, wavesurferInstance }) {
         ></input>
       </div>
       <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
-      {/* onClick expects a function reference, not the result of calling a function (that's why we use anonymus function) */}
-            <button onClick={() => 
-              isPlaying ? stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players) : startPlayback(isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration)}>
-                {isPlaying ? "Stop" : "Play"}
-            </button>
+        {/* onClick expects a function reference, not the result of calling a function (that's why we use anonymus function) */}
+        <button
+          onClick={() => {
+            if (isPlaying) {
+              stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players);
+            } else {
+              Tone.start()
+                .then(() => {
+                  console.log("AudioContext started");
+                  startPlayback(players, isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration);
+                })
+                .catch((err) => {
+                  console.error("Error starting AudioContext:", err);
+                });
+            }
+          }}
+        >
+          {isPlaying ? "Stop" : "Play"}
+        </button>
+
       </div>
-      
+
       <section>
         <h3>Playback Controls</h3>
         <Slider label="Grain number" value={grains} onChange={setGrains} min={5} max={100} />
@@ -119,19 +134,19 @@ function Player({ fileUrl, wavesurferInstance }) {
       </section>
 
       <div>
-        <button onClick={() => 
+        <button onClick={() =>
           isRecording ? stopRecording(recorder, isRecording, setIsRecording, setRecordedAudioURL) : startRecording(recorder, isRecording, setIsRecording)}>
           {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
-        </div>
-          { recordedAudioURL && ( // checking if recordedAudioURL exists 
+      </div>
+      {recordedAudioURL && ( // checking if recordedAudioURL exists 
         <div>
-            <p>Recording completed.
-              <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav"> Download the result</a>
-            </p>
-            <audio controls src={recordedAudioURL}></audio>
+          <p>Recording completed.
+            <a href={recordedAudioURL} target="_blank" rel="noopener noreferrer" download="recording.wav"> Download the result</a>
+          </p>
+          <audio controls src={recordedAudioURL}></audio>
         </div>
-        )}
+      )}
     </section>
   );
 }

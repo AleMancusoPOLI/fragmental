@@ -59,6 +59,7 @@ export const createGrainPlayers = async (url, grainNumber) => {
 // Play a random grain (TO BE EDITED TO PLAY A GRAIN BASED ON SLIDER POSITION)
 export const playGrain = (players, duration) => {
     if (players.length > 0) {
+      console.log("playing grain")
       const randomIndex = Math.floor(Math.random() * players.length);
       const grain = players[randomIndex];
 
@@ -68,13 +69,13 @@ export const playGrain = (players, duration) => {
   };
 
 // Start playback at the specified rate
-export const startPlayback = (isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration) => {
+export const startPlayback = (players, isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration) => {
     if (!isPlaying) {
-        console.log("playback started", rate.value);
+        console.log("playback started");
         setIsPlaying(true);
         // Create a loop for playing grains
         const newLoop = new Tone.Loop((time) => {
-          playGrain(duration);
+          playGrain(players, duration);
         }, rate / 1000); // Initial interval based on rate
         newLoop.probability = probability;
         // Store loop instance
