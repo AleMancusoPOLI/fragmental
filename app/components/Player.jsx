@@ -61,8 +61,8 @@ function Player({ fileUrl, wavesurferInstance }) {
     return () => {
       // Dispose players on cleanup
       players.forEach((player) => player.dispose());
-      // dispose recorder 
-      if (recorder) recorder.dispose(); 
+      // dispose recorder
+      if (recorder) recorder.dispose();
     };
   }, [fileUrl, grains, debouncedInitializePlayers]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
