@@ -44,6 +44,8 @@ export const createGrainPlayers = async (url, grainNumber) => {
     const player = new Tone.Player({
       url,
       loop: false,
+      fadeIn: 0.1,
+      fadeOut: 0.1,
       onload: () => {
         // Every grain buffer is the whole buffer sliced from start to end
         player.buffer = player.buffer.slice(start, end);
