@@ -1,17 +1,17 @@
 import * as Tone from "tone";
 
 // Initialize players and connect to destination
-export const initializePlayers = async (url, grainNumber, setPlayers, setRecorder) => {
+export const initializePlayers = async (url, grainNumber, setPlayers, setRecorder, gain, setGainNode, setPitchNode) => {
   console.log("Initializing players...", grainNumber);
   // Intermediate function is need to have an async block
   const grainPlayers = await createGrainPlayers(url, grainNumber);
-
+  const [g, p] = await initNodes(gain, setGainNode, setPitchNode);
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
   grainPlayers.forEach(
     (player) => {
       player.connect(recorderInstance); // Connecting to the recorder
-      player.toDestination(); // Connecting to the output speakers
+      player.chain(p, g); // Connecting to the nodes
     });
   // Set players and recoder
   setPlayers(grainPlayers);
@@ -52,6 +52,14 @@ export const createGrainPlayers = async (url, grainNumber) => {
     grainPlayers.push(player); // add player to the array
   }
   return grainPlayers;
+};
+
+const initNodes = async (gain, setGainNode, setPitchNode) => {
+  const g = new Tone.Gain(gain).toDestination();
+  const p = new Tone.PitchShift();
+  setGainNode(g);
+  setPitchNode(p);
+  return [g, p];
 };
 
 // Play a random grain

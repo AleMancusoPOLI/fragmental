@@ -17,6 +17,12 @@ const usePlayerState = () => {
   const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
   const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
   const [isRecording, setIsRecording] = useState(false); //For saving the recording state
+  // Nodes
+  const [gain, setGain] = useState(1);
+  const [gainNode, setGainNode] = useState(null);
+  const [pitch, setPitch] = useState(0);
+  const [pitchNode, setPitchNode] = useState(null);
+
 
   return {
     state: {
@@ -32,6 +38,10 @@ const usePlayerState = () => {
       recorder,
       recordedAudioURL,
       isRecording,
+      gain,
+      gainNode,
+      pitch,
+      pitchNode
     },
     setters: {
       setIsPlaying,
@@ -46,6 +56,10 @@ const usePlayerState = () => {
       setRecorder,
       setRecordedAudioURL,
       setIsRecording,
+      setGain,
+      setGainNode,
+      setPitch,
+      setPitchNode
     }
   };
 };

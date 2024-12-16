@@ -11,12 +11,12 @@ import Slider from "./Slider"
 function Player({ fileUrl, wavesurferInstance }) {
 
   const { state, setters } = usePlayerState();
-  const { isPlaying, players, position, range, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording } = state;
-  const { setIsPlaying, setPlayers, setPosition, setRange, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording } = setters;
+  const { isPlaying, players, position, range, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording, gain, gainNode, pitch, pitchNode } = state;
+  const { setIsPlaying, setPlayers, setPosition, setRange, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording, setGain, setGainNode, setPitch, setPitchNode } = setters;
 
   const debouncedInitializePlayers = useCallback(
     debounce((url, grainNumber) => {
-      initializePlayers(url, grainNumber, setPlayers, setRecorder);
+      initializePlayers(url, grainNumber, setPlayers, setRecorder, gain, setGainNode, setPitchNode);
     }, 200),
     []
   );
@@ -99,6 +99,18 @@ function Player({ fileUrl, wavesurferInstance }) {
     debouncedUpdateProbability(probability, loop);
   }, [probability, debouncedUpdateProbability]);
 
+  useEffect(() => {
+    if (gainNode == null) return
+    console.log("Gain value changed");
+    gainNode.gain.rampTo(gain, 0.01);
+  }, [gain]);
+
+  useEffect(() => {
+    if (pitchNode == null) return
+    console.log("Pitch value changed");
+    pitchNode.pitch = pitch;
+  }, [pitch]);
+
   // HTML
   return (
     <section>
@@ -156,6 +168,9 @@ function Player({ fileUrl, wavesurferInstance }) {
 
       <section>
         <h3>Playback Controls</h3>
+        <Slider label="Gain" value={gain} onChange={setGain} min={0} max={2} step={0.01} />
+        <Slider label="Pitch" value={pitch} onChange={setPitch} min={-12} max={12} />
+
         <Slider label="Grain number" value={grains} onChange={setGrains} min={5} max={100} />
         <Slider label="Playback rate (ms)" value={rate} onChange={setRate} min={100} max={1000} />
         <Slider label="Duration (ms)" value={duration} onChange={setDuration} min={10} max={1000} />
