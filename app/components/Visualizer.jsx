@@ -12,9 +12,9 @@ function Visualizer({ fileUrl, onSampleReady }) {
       // Initialize WaveSurfer
       const wavesurfer = WaveSurfer.create({
         container: waveformContainerRef.current,
-        waveColor: "#ddd",
-        progressColor: "#ddd",
-        cursorColor: "#800080",
+        waveColor: "rgba(210, 215, 211, 1)",
+        progressColor: "rgba(210, 215, 211, 1)",
+        cursorColor: "rgba(128, 0, 128, 0.4)",
         cursorWidth: 5,
         responsive: true,
         interact: false,

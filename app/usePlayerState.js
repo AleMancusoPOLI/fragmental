@@ -7,6 +7,7 @@ const usePlayerState = () => {
   const [isPlaying, setIsPlaying] = useState(false); // Boolean for the play/pause button
   const [players, setPlayers] = useState([]); // Array of players, one for each grain
   const [position, setPosition] = useState(0); // Start position
+  const [range, setRange] = useState(0); // Range of random picking
   const [grains, setGrains] = useState(10); // Number of grains
   const [rate, setRate] = useState(500); // Rate in milliseconds
   const [duration, setDuration] = useState(500); // Duration in milliseconds
@@ -22,6 +23,7 @@ const usePlayerState = () => {
       isPlaying,
       players,
       position,
+      range,
       grains,
       rate,
       duration,
@@ -35,6 +37,7 @@ const usePlayerState = () => {
       setIsPlaying,
       setPlayers,
       setPosition,
+      setRange,
       setGrains,
       setRate,
       setDuration,

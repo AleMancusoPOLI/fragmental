@@ -11,8 +11,8 @@ import Slider from "./Slider"
 function Player({ fileUrl, wavesurferInstance }) {
 
   const { state, setters } = usePlayerState();
-  const { isPlaying, players, position, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording } = state;
-  const { setIsPlaying, setPlayers, setPosition, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording } = setters;
+  const { isPlaying, players, position, range, grains, rate, duration, loop, probability, recorder, recordedAudioURL, isRecording } = state;
+  const { setIsPlaying, setPlayers, setPosition, setRange, setGrains, setRate, setDuration, setLoop, setProbability, setRecorder, setRecordedAudioURL, setIsRecording } = setters;
 
   const debouncedInitializePlayers = useCallback(
     debounce((url, grainNumber) => {
@@ -54,8 +54,23 @@ function Player({ fileUrl, wavesurferInstance }) {
     // Side effect logic
     if (!fileUrl) return;
     console.log("URL or grain number changed");
-    stopPlayback(); // limit! is it possible to keep playing while changing the grain number?
+    stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players); // limit! is it possible to keep playing while changing the grain number?
     debouncedInitializePlayers(fileUrl, grains);
+
+    // update position and range value based on the new number of grains
+    let p = position
+    let r = range
+    if (position > grains) {
+      p = grains
+      r = grains
+    }
+    setPosition(p)
+    setRange(r)
+
+    // update visualizer based on the new number of grains
+    wavesurferInstance.seekTo(p / grains);
+    wavesurferInstance.setOptions({ cursorWidth: wavesurferInstance.getWidth() / grains });
+
 
     // Cleanup logic
     return () => {
@@ -102,6 +117,20 @@ function Player({ fileUrl, wavesurferInstance }) {
           }}
         ></input>
       </div>
+      <div>
+        <p>Range: {range}</p>
+        <input
+          type="range"
+          min={0}
+          max={grains}
+          step={1}
+          value={range}
+          onChange={(e) => {
+            setRange(Number(e.target.value));
+            // Move cursor on the visualizer
+          }}
+        ></input>
+      </div>
       <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
         {/* onClick expects a function reference, not the result of calling a function (that's why we use anonymus function) */}
         <button
@@ -112,7 +141,7 @@ function Player({ fileUrl, wavesurferInstance }) {
               Tone.start()
                 .then(() => {
                   console.log("AudioContext started");
-                  startPlayback(players, isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration);
+                  startPlayback(players, isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration, position, range);
                 })
                 .catch((err) => {
                   console.error("Error starting AudioContext:", err);
