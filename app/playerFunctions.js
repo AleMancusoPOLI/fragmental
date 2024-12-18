@@ -1,23 +1,30 @@
 import * as Tone from "tone";
 
 // Initialize players and connect to destination
-export const initializePlayers = async (url, grainNumber, setPlayers, setRecorder, gain, setGainNode, setPitchNode) => {
+export const initializePlayers = async (
+  url,
+  grainNumber,
+  setPlayers,
+  setRecorder,
+  gain,
+  setGainNode,
+  setPitchNode
+) => {
   console.log("Initializing players...", grainNumber);
   // Intermediate function is need to have an async block
   const grainPlayers = await createGrainPlayers(url, grainNumber);
   const [g, p] = await initNodes(gain, setGainNode, setPitchNode);
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
-  grainPlayers.forEach(
-    (player) => {
-      player.connect(recorderInstance); // Connecting to the recorder
-      player.chain(p, g); // Connecting to the nodes
-    });
+  grainPlayers.forEach((player) => {
+    player.connect(recorderInstance); // Connecting to the recorder
+    player.chain(p, g); // Connecting to the nodes
+  });
   // Set players and recoder
   setPlayers(grainPlayers);
   setRecorder(recorderInstance);
 
-  // logs 
+  // logs
   console.log("Players're ready!");
   console.log("Recoder's ready!");
 };
@@ -44,11 +51,14 @@ export const createGrainPlayers = async (url, grainNumber) => {
     const player = new Tone.Player({
       url,
       loop: false,
-      fadeIn: 0.1,
-      fadeOut: 0.1,
       onload: () => {
         // Every grain buffer is the whole buffer sliced from start to end
         player.buffer = player.buffer.slice(start, end);
+        const fadeTime = parseFloat(player.buffer.duration.toFixed(1)) * 0.1;
+        console.log(fadeTime);
+
+        player.fadeIn = fadeTime;
+        player.fadeOut = fadeTime / 2;
       },
     });
     grainPlayers.push(player); // add player to the array
@@ -67,7 +77,7 @@ const initNodes = async (gain, setGainNode, setPitchNode) => {
 // Play a random grain
 export const playGrain = (players, duration, position, range) => {
   if (players.length > 0) {
-    console.log("playing grain")
+    console.log("playing grain");
 
     // Ensure indexes are not out of bounds
     const startIndex = Math.max(0, position - range); // 0 or pos-range
@@ -84,15 +94,34 @@ export const playGrain = (players, duration, position, range) => {
 };
 
 // Start playback at the specified rate
-export const startPlayback = (players, isPlaying, setIsPlaying, setLoop, playGrain, rate, probability, duration, position, range) => {
+export const startPlayback = (
+  players,
+  isPlaying,
+  setIsPlaying,
+  setLoop,
+  playGrain,
+  rate,
+  probability,
+  durationRef, // Pass refs instead of functions
+  positionRef,
+  rangeRef
+) => {
   if (!isPlaying) {
     console.log("playback started");
     setIsPlaying(true);
+
     // Create a loop for playing grains
     const newLoop = new Tone.Loop((time) => {
+      // Use the getter functions to fetch updated values
+      const duration = durationRef.current;
+      const position = positionRef.current;
+      const range = rangeRef.current;
+
       playGrain(players, duration, position, range);
     }, rate / 1000); // Initial interval based on rate
+
     newLoop.probability = probability;
+
     // Store loop instance
     newLoop.start(0);
     setLoop(newLoop);
@@ -102,8 +131,15 @@ export const startPlayback = (players, isPlaying, setIsPlaying, setLoop, playGra
 };
 
 // Stop playback
-export const stopPlayback = (isPlaying, setIsPlaying, loop, setLoop, players) => {
+export const stopPlayback = (
+  isPlaying,
+  setIsPlaying,
+  loop,
+  setLoop,
+  players
+) => {
   if (isPlaying) {
+    console.log("playback stopped");
     setIsPlaying(false);
     if (loop) {
       loop.stop();
