@@ -13,7 +13,7 @@ import {
 import { startRecording, stopRecording } from "../recordingFunctions";
 import Slider from "./Slider";
 
-function Player({ fileUrl, wavesurferInstance }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -53,15 +53,18 @@ function Player({ fileUrl, wavesurferInstance }) {
   } = setters;
 
   const debouncedInitializePlayers = useCallback(
-    debounce((url, grainNumber) => {
+    debounce((url, grainNumber, onGainNodeReady, gainNode, pitchNode) => {
       initializePlayers(
         url,
         grainNumber,
         setPlayers,
         setRecorder,
         gain,
+        gainNode,
+        pitchNode,
         setGainNode,
-        setPitchNode
+        setPitchNode,
+        onGainNodeReady
       );
     }, 200),
     []
@@ -121,7 +124,13 @@ function Player({ fileUrl, wavesurferInstance }) {
     if (!fileUrl) return;
     console.log("URL or grain number changed");
     stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players); // limit! is it possible to keep playing while changing the grain number?
-    debouncedInitializePlayers(fileUrl, grains);
+    debouncedInitializePlayers(
+      fileUrl,
+      grains,
+      onGainNodeReady,
+      gainNode,
+      pitchNode
+    );
 
     // update position and range value based on the new number of grains
     let p = position;

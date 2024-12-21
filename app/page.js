@@ -6,10 +6,12 @@ import React, { useState } from "react";
 import Dropzone from "./components/Dropzone";
 import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
+import Effects from "./components/Effects";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
   const [wavesurferInstance, setWavesurferInstance] = useState(null); // Instance of the sample visualizer, used by Player to sync with Visualizer
+  const [gainNode, setGainNode] = useState(null);
 
   return (
     <section className="section">
@@ -29,8 +31,10 @@ export default function Home() {
               <Player
                 fileUrl={fileUrl}
                 wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
+                onGainNodeReady={setGainNode}
               />
             )}
+            {gainNode && <Effects gainNode={gainNode} />}
           </div>
         </div>
       </div>
