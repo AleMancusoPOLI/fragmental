@@ -65,7 +65,6 @@ export const createGrainPlayers = async (url, grainNumber) => {
         // Every grain buffer is the whole buffer sliced from start to end
         player.buffer = player.buffer.slice(start, end);
         const fadeTime = parseFloat(player.buffer.duration.toFixed(1)) * 0.1;
-        console.log(fadeTime);
 
         player.fadeIn = fadeTime;
         player.fadeOut = fadeTime / 2;
