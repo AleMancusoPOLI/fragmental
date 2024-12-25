@@ -320,7 +320,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         />
       </section>
 
-      <div>
+      <div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
         <button
           onClick={() =>
             isRecording
@@ -340,11 +340,13 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         <div>
           <p>
             Recording completed.
+            <br />
             <a
               href={recordedAudioURL}
               target="_blank"
               rel="noopener noreferrer"
               download="recording.wav"
+              className="text-blue-800 italic"
             >
               {" "}
               Download the result

@@ -10,6 +10,8 @@ function Effects({ gainNode }) {
   const [delay, setDelay] = useState(0);
   const [chorusNode, setChorusNode] = useState(null);
   const [chorus, setChorus] = useState(0);
+  const [crusherNode, setCrusherNode] = useState(null);
+  const [crusher, setCrusher] = useState(16);
 
   // Initialize effect nodes
   useEffect(() => {
@@ -25,12 +27,22 @@ function Effects({ gainNode }) {
     const chorNode = new Tone.Chorus(4, 25, 1).set({
       wet: 0,
     });
+    const crushNode = new Tone.BitCrusher(16).set({
+      wet: 0.7,
+    });
 
     setReverbNode(revNode);
     setDelayNode(delNode);
     setChorusNode(chorNode);
+    setCrusherNode(crushNode);
 
-    gainNode.chain(revNode, delNode, chorNode, Tone.getDestination());
+    gainNode.chain(
+      crushNode,
+      revNode,
+      delNode,
+      chorNode,
+      Tone.getDestination()
+    );
   }, [gainNode]);
 
   const debouncedUpdateReverb = useCallback(
@@ -63,6 +75,16 @@ function Effects({ gainNode }) {
     []
   );
 
+  const debouncedUpdateCrusher = useCallback(
+    debounce((crusher, crusherNode) => {
+      console.log("Changing crusher...", crusher);
+      crusherNode.set({
+        bits: crusher,
+      });
+    }, 200),
+    []
+  );
+
   useEffect(() => {
     if (!reverbNode) return;
     debouncedUpdateReverb(reverb, reverbNode);
@@ -77,6 +99,11 @@ function Effects({ gainNode }) {
     if (!chorusNode) return;
     debouncedUpdateChorus(chorus, chorusNode);
   }, [chorus]);
+
+  useEffect(() => {
+    if (!crusherNode) return;
+    debouncedUpdateCrusher(crusher, crusherNode);
+  }, [crusher]);
 
   return (
     <section className="rounded-sm border-solid border-2 border-black p-2">
@@ -107,6 +134,15 @@ function Effects({ gainNode }) {
           max={1}
           step={0.01}
           defaultValue={0}
+        />
+        <Slider
+          label="Crusher"
+          value={crusher}
+          onChange={setCrusher}
+          min={1}
+          max={16}
+          step={0.01}
+          defaultValue={16}
         />
       </div>
     </section>
