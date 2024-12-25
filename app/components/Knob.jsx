@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-function Knob({ label, value, onChange, min, max, step = 1 }) {
+function Knob({ label, value, onChange, min, max, step = 1, defaultValue }) {
   const range = max - min;
   const rotation = ((value - min) / range) * 270 - 135; // Map value to rotation (-135° to 135°)
 
@@ -49,6 +49,7 @@ function Knob({ label, value, onChange, min, max, step = 1 }) {
     >
       <div
         onMouseDown={handleMouseDown}
+        onDoubleClick={() => onChange(defaultValue)}
         className="w-12 h-12 cursor-grab select-none"
         style={{
           transform: `rotate(${rotation}deg)`,

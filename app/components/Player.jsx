@@ -273,6 +273,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           min={0}
           max={2}
           step={0.01}
+          defaultValue={1}
         />
         <Slider
           label="Pitch"
@@ -280,6 +281,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           onChange={setPitch}
           min={-12}
           max={12}
+          step={0.01}
+          defaultValue={0}
         />
 
         <Slider
@@ -288,6 +291,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           onChange={setGrains}
           min={5}
           max={100}
+          defaultValue={50}
         />
         <Slider
           label="Playback rate (ms)"
@@ -295,6 +299,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           onChange={setRate}
           min={100}
           max={1000}
+          defaultValue={500}
         />
         <Slider
           label="Duration (ms)"
@@ -302,6 +307,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           onChange={setDuration}
           min={10}
           max={1000}
+          defaultValue={250}
         />
         <Slider
           label="Probability"
@@ -310,6 +316,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           min={0}
           max={1}
           step={0.01}
+          defaultValue={1}
         />
       </section>
 
