@@ -9,8 +9,10 @@
 4. export DONE
 5. envelopes
 6. effects WIP
-7. audio library 
-8. UI/UX
+   6.1. stand-alone effects
+   6.2. multiple effects (ethereal, vintage, etc...)
+8. audio library 
+9. UI/UX
 
 ----
 FIXES:
