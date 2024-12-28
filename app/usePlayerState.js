@@ -8,9 +8,9 @@ const usePlayerState = () => {
   const [players, setPlayers] = useState([]); // Array of players, one for each grain
   const [position, setPosition] = useState(0); // Start position
   const [range, setRange] = useState(0); // Range of random picking
-  const [grains, setGrains] = useState(10); // Number of grains
+  const [grains, setGrains] = useState(50); // Number of grains
   const [rate, setRate] = useState(500); // Rate in milliseconds
-  const [duration, setDuration] = useState(500); // Duration in milliseconds
+  const [duration, setDuration] = useState(250); // Duration in milliseconds
   const [loop, setLoop] = useState(null); // To control the loop
   const [probability, setProbability] = useState(1); // The probability of playing a grain
   // For the audio recording
@@ -22,7 +22,6 @@ const usePlayerState = () => {
   const [gainNode, setGainNode] = useState(null);
   const [pitch, setPitch] = useState(0);
   const [pitchNode, setPitchNode] = useState(null);
-
 
   return {
     state: {
@@ -41,7 +40,7 @@ const usePlayerState = () => {
       gain,
       gainNode,
       pitch,
-      pitchNode
+      pitchNode,
     },
     setters: {
       setIsPlaying,
@@ -59,8 +58,8 @@ const usePlayerState = () => {
       setGain,
       setGainNode,
       setPitch,
-      setPitchNode
-    }
+      setPitchNode,
+    },
   };
 };
 

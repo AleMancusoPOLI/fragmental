@@ -2,17 +2,24 @@
     - probability DONE
     - pitch shifting DONE
     - gain DONE
-2. implement the slider idea (maths behind it). We want to play the grain which is pointed by the slider or/and the left/right neigbor 
-    - the algorithm 
-    - the UI 
+2. implement the slider
+    - the algorithm DONE
+    - the UI DONE (no range, just slider)
 3. recording DONE
 4. export DONE
 5. envelopes
-6. effects 
-7. audio library 
-8. UI/UX
+6. effects WIP
+   * stand-alone effects
+   * multiple effects (ethereal, vintage, etc...)
+8. audio library 
+9. UI/UX
 
 ----
-to fix the performance
-to add info panels on hover
-to fix the export
+FIXES:
+* fix the performance
+* add info panels on hover --> create info component and show it on hover
+* fix the recording export
+    * can't use it in DAW (probably duration/metadata issues)
+    * recording rate is faster thatn actual play rate
+    * recording doesn't record effects
+        * solution: separate Recorder component from Player and pass final node to the Recorder

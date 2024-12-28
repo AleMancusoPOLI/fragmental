@@ -13,7 +13,7 @@ import {
 import { startRecording, stopRecording } from "../recordingFunctions";
 import Slider from "./Slider";
 
-function Player({ fileUrl, wavesurferInstance }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -53,15 +53,18 @@ function Player({ fileUrl, wavesurferInstance }) {
   } = setters;
 
   const debouncedInitializePlayers = useCallback(
-    debounce((url, grainNumber) => {
+    debounce((url, grainNumber, onGainNodeReady, gainNode, pitchNode) => {
       initializePlayers(
         url,
         grainNumber,
         setPlayers,
         setRecorder,
         gain,
+        gainNode,
+        pitchNode,
         setGainNode,
-        setPitchNode
+        setPitchNode,
+        onGainNodeReady
       );
     }, 200),
     []
@@ -121,7 +124,13 @@ function Player({ fileUrl, wavesurferInstance }) {
     if (!fileUrl) return;
     console.log("URL or grain number changed");
     stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players); // limit! is it possible to keep playing while changing the grain number?
-    debouncedInitializePlayers(fileUrl, grains);
+    debouncedInitializePlayers(
+      fileUrl,
+      grains,
+      onGainNodeReady,
+      gainNode,
+      pitchNode
+    );
 
     // update position and range value based on the new number of grains
     let p = position;
@@ -264,6 +273,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           min={0}
           max={2}
           step={0.01}
+          defaultValue={1}
         />
         <Slider
           label="Pitch"
@@ -271,6 +281,8 @@ function Player({ fileUrl, wavesurferInstance }) {
           onChange={setPitch}
           min={-12}
           max={12}
+          step={0.01}
+          defaultValue={0}
         />
 
         <Slider
@@ -279,6 +291,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           onChange={setGrains}
           min={5}
           max={100}
+          defaultValue={50}
         />
         <Slider
           label="Playback rate (ms)"
@@ -286,6 +299,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           onChange={setRate}
           min={100}
           max={1000}
+          defaultValue={500}
         />
         <Slider
           label="Duration (ms)"
@@ -293,6 +307,7 @@ function Player({ fileUrl, wavesurferInstance }) {
           onChange={setDuration}
           min={10}
           max={1000}
+          defaultValue={250}
         />
         <Slider
           label="Probability"
@@ -301,10 +316,11 @@ function Player({ fileUrl, wavesurferInstance }) {
           min={0}
           max={1}
           step={0.01}
+          defaultValue={1}
         />
       </section>
 
-      <div>
+      <div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
         <button
           onClick={() =>
             isRecording
@@ -324,11 +340,13 @@ function Player({ fileUrl, wavesurferInstance }) {
         <div>
           <p>
             Recording completed.
+            <br />
             <a
               href={recordedAudioURL}
               target="_blank"
               rel="noopener noreferrer"
               download="recording.wav"
+              className="text-blue-800 italic"
               type="audio/wav"
             >
               {" "}

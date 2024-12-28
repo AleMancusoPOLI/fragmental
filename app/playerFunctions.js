@@ -7,13 +7,23 @@ export const initializePlayers = async (
   setPlayers,
   setRecorder,
   gain,
+  gainNode,
+  pitchNode,
   setGainNode,
-  setPitchNode
+  setPitchNode,
+  onGainNodeReady
 ) => {
   console.log("Initializing players...", grainNumber);
   // Intermediate function is need to have an async block
   const grainPlayers = await createGrainPlayers(url, grainNumber);
-  const [g, p] = await initNodes(gain, setGainNode, setPitchNode);
+  let [g, p] = [null, null];
+  console.log(gainNode, pitchNode)
+  if (gainNode && pitchNode) {
+    [g, p] = [gainNode, pitchNode];
+  } else {
+    [g, p] = await initNodes(gain, setGainNode, setPitchNode);
+    onGainNodeReady(g);
+  }
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
   grainPlayers.forEach((player) => {
@@ -66,7 +76,6 @@ export const createGrainPlayers = async (url, grainNumber) => {
         // Every grain buffer is the whole buffer sliced from start to end
         player.buffer = player.buffer.slice(start, end);
         const fadeTime = parseFloat(player.buffer.duration.toFixed(1)) * 0.1;
-        console.log(fadeTime);
 
         player.fadeIn = fadeTime;
         player.fadeOut = fadeTime / 2;
@@ -78,7 +87,7 @@ export const createGrainPlayers = async (url, grainNumber) => {
 };
 
 const initNodes = async (gain, setGainNode, setPitchNode) => {
-  const g = new Tone.Gain(gain).toDestination();
+  const g = new Tone.Gain(gain);
   const p = new Tone.PitchShift();
   setGainNode(g);
   setPitchNode(p);
