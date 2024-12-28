@@ -329,6 +329,7 @@ function Player({ fileUrl, wavesurferInstance }) {
               target="_blank"
               rel="noopener noreferrer"
               download="recording.wav"
+              type="audio/wav"
             >
               {" "}
               Download the result

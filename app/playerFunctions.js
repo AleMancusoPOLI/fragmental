@@ -17,9 +17,12 @@ export const initializePlayers = async (
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
   grainPlayers.forEach((player) => {
-    player.connect(recorderInstance); // Connecting to the recorder
+    //player.connect(recorderInstance); // Connecting to the recorder
     player.chain(p, g); // Connecting to the nodes
   });
+
+  g.connect(recorderInstance); // Connecting to the recorder
+
   // Set players and recoder
   setPlayers(grainPlayers);
   setRecorder(recorderInstance);
@@ -36,8 +39,16 @@ export const createGrainPlayers = async (url, grainNumber) => {
 
   // Fetch and decode the audio file
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch audio file: ${response.statusText}`);
+  }
+
   const arrayBuffer = await response.arrayBuffer();
   const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  if (audioBuffer.numberOfChannels === 0) {
+    throw new Error("Audio buffer has no channels");
+  }
 
   // Compute the exact interval between every grain
   const grainDuration = audioBuffer.duration / grainNumber;
