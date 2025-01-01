@@ -45,7 +45,7 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue }) {
   return (
     <div
       id={`knob-${label}`}
-      className="py-3 pr-3 flex flex-col items-center relative group w-20" // fixed width to ensure all knobs look the same
+      className="py-3 mx-3 flex flex-col items-center relative group w-20" // fixed width to ensure all knobs look the same
     >
       <div
         onMouseDown={handleMouseDown}

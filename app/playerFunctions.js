@@ -17,13 +17,13 @@ export const initializePlayers = async (
   // Intermediate function is need to have an async block
   const grainPlayers = await createGrainPlayers(url, grainNumber);
   let [g, p] = [null, null];
-  console.log(gainNode, pitchNode)
   if (gainNode && pitchNode) {
     [g, p] = [gainNode, pitchNode];
   } else {
     [g, p] = await initNodes(gain, setGainNode, setPitchNode);
     onGainNodeReady(g);
   }
+  console.log(g, p);
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
   grainPlayers.forEach((player) => {
