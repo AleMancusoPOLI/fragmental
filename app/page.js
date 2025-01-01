@@ -7,6 +7,7 @@ import Dropzone from "./components/Dropzone";
 import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
 import Effects from "./components/Effects";
+import Library from "./components/Library";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
@@ -20,10 +21,12 @@ export default function Home() {
         <p className="text-center font-thin">Double click to reset values</p>
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
-            <Dropzone
-              onFileDrop={setFileUrl} // when onFileDrop is called in Dropzone, then setFileUrl is called here with the same argument
-              className="m-1 p-2 rounded border-2 border-solid"
-            ></Dropzone>
+            <div className="m-2">
+              <Dropzone
+                onFileDrop={setFileUrl} // when onFileDrop is called in Dropzone, then setFileUrl is called here with the same argument
+              ></Dropzone>
+              <Library onFileSelected={setFileUrl}></Library>
+            </div>
             <Visualizer
               fileUrl={fileUrl}
               onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument

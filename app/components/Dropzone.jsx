@@ -25,11 +25,7 @@ function Dropzone({ onFileDrop, className }) {
   });
 
   return (
-    <div
-      {...getRootProps({
-        className: className,
-      })}
-    >
+    <div className="m-1 p-2 rounded border-2 border-solid">
       <input {...getInputProps()} />
       <div>Drop your sample here</div>
     </div>
