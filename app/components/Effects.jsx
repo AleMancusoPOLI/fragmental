@@ -13,7 +13,7 @@ function Effects({ gainNode }) {
   const [crusherNode, setCrusherNode] = useState(null);
   const [crusher, setCrusher] = useState(1);
   const [filterNode, setFilterNode] = useState(null);
-  const [darkBright, setDarkBright] = useState(0); // Single knob value
+  const [darkBright, setDarkBright] = useState(0);
 
   // Initialize effect nodes
   useEffect(() => {
@@ -26,11 +26,11 @@ function Effects({ gainNode }) {
     const delNode = new Tone.FeedbackDelay(0.125, 0.4).set({
       wet: 0,
     });
-    const chorNode = new Tone.Chorus(4, 25, 1).set({
+    const chorNode = new Tone.Chorus(4, 15, 1).set({
       wet: 0,
     });
     const crushNode = new Tone.BitCrusher(16);
-    const filterNode = new Tone.Filter(20000, "lowpass"); // Default to low-pass
+    const filterNode = new Tone.Filter(20000, "allpass");
 
     setReverbNode(revNode);
     setDelayNode(delNode);
@@ -92,7 +92,7 @@ function Effects({ gainNode }) {
   // Adjust filter based on dark/bright knob
   useEffect(() => {
     if (!filterNode) return;
-    console.log("Changing filter with dark/bright...", darkBright);
+    console.log("Changing filter...", darkBright);
 
     if (darkBright < 0) {
       // Low-pass mode
@@ -127,6 +127,7 @@ function Effects({ gainNode }) {
             max={1}
             step={0.01}
             defaultValue={0}
+            description={"Description"}
           />
           <Knob
             label="Delay"
@@ -136,6 +137,7 @@ function Effects({ gainNode }) {
             max={1}
             step={0.01}
             defaultValue={0}
+            description={"Description"}
           />
           <Knob
             label="Chorus"
@@ -145,6 +147,7 @@ function Effects({ gainNode }) {
             max={1}
             step={0.01}
             defaultValue={0}
+            description={"Description"}
           />
           <Knob
             label="Crusher"
@@ -154,6 +157,7 @@ function Effects({ gainNode }) {
             max={16}
             step={0.01}
             defaultValue={1}
+            description={"Description"}
           />
         </div>
 
@@ -166,6 +170,7 @@ function Effects({ gainNode }) {
             max={1}
             step={0.01}
             defaultValue={0}
+            description={"Description"}
           />
         </div>
       </div>

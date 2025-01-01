@@ -1,8 +1,7 @@
-// To be used later when we will have a knob image (called Knob.jpg in public/assets)
-
 import Image from "next/image";
+import Tooltip from "./Tooltip";
 
-function Knob({ label, value, onChange, min, max, step = 1, defaultValue }) {
+function Knob({ label, value, onChange, min, max, step = 1, defaultValue, description }) {
   const range = max - min;
   const rotation = ((value - min) / range) * 270 - 135; // Map value to rotation (-135° to 135°)
 
@@ -64,10 +63,7 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue }) {
         />
       </div>
 
-      {/* Tooltip for displaying the value */}
-      <div className="absolute top-[-30px] text-sm bg-gray-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-        {value.toFixed(2)}
-      </div>
+      <Tooltip description={description} value={value.toFixed(2)} />
 
       <p className="text-sm mt-2 text-center">{label}</p>
     </div>
