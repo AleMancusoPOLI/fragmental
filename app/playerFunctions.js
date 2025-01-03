@@ -124,12 +124,12 @@ export const playGrain = (players, duration, position, range, envelopeADSR) => {
 
     const randomIndex = Math.floor(Math.random() * playersInRange.length);
     const grain = playersInRange[randomIndex];
-
-    const envelope = mapEnvelopeToDuration(envelopeADSR, duration); // Map envelope
+    const durationSeconds = duration / 1000;
+    const envelope = mapEnvelopeToDuration(envelopeADSR, durationSeconds); // Map envelope
     applyEnvelope([grain], envelope);
 
     grain.start(Tone.now());
-    grain.stop(Tone.now() + duration / 1000); // Stop based on updated duration
+    grain.stop(Tone.now() + durationSeconds); // Stop based on updated duration
   }
 };
 
