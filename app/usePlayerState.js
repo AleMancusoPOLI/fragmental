@@ -22,6 +22,14 @@ const usePlayerState = () => {
   const [gainNode, setGainNode] = useState(null);
   const [pitch, setPitch] = useState(0);
   const [pitchNode, setPitchNode] = useState(null);
+  // Envelope 
+  const [envelope, setEnvelope] = useState([
+      { time: 0, amplitude: 0 },
+      { time: 0.2, amplitude: 1 },
+      { time: 0.8, amplitude: 1 },
+      { time: 1, amplitude: 0 }
+  ]);
+  const [curvatures, setCurvatures] = useState([1, 1, 1]);  // Default curvature values for Attack, Decay, Release
 
   return {
     state: {
@@ -41,6 +49,8 @@ const usePlayerState = () => {
       gainNode,
       pitch,
       pitchNode,
+      envelope,
+      curvatures,
     },
     setters: {
       setIsPlaying,
@@ -59,6 +69,8 @@ const usePlayerState = () => {
       setGainNode,
       setPitch,
       setPitchNode,
+      setEnvelope,
+      setCurvatures,
     },
   };
 };

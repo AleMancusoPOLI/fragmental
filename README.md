@@ -1,6 +1,7 @@
 Install the necessary dependencies (if needed):
 ```bash
 npm install next react react-dom
+npm install firebase
 ```
 Run the development server:
 

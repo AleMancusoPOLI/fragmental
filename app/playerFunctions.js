@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { applyEnvelope } from "./envelopeLogic";
 
 // Initialize players and connect to destination
 export const initializePlayers = async (
@@ -27,11 +28,11 @@ export const initializePlayers = async (
   // Creating and connecting the recording instance
   const recorderInstance = new Tone.Recorder();
   grainPlayers.forEach((player) => {
-    //player.connect(recorderInstance); // Connecting to the recorder
+    player.connect(recorderInstance); // Connecting to the recorder
     player.chain(p, g); // Connecting to the nodes
   });
 
-  g.connect(recorderInstance); // Connecting to the recorder
+  //g.connect(recorderInstance); // Connecting to the recorder
 
   // Set players and recoder
   setPlayers(grainPlayers);
@@ -67,7 +68,7 @@ export const createGrainPlayers = async (url, grainNumber) => {
   for (let i = 0; i < grainNumber; i++) {
     // Start and end positions of the specific grain on the audio buffer
     const start = i * grainDuration;
-    const end = start + grainDuration;
+    const end = Math.min(start + grainDuration, audioBuffer.duration);
 
     const player = new Tone.Player({
       url,
@@ -95,7 +96,7 @@ const initNodes = async (gain, setGainNode, setPitchNode) => {
 };
 
 // Play a random grain
-export const playGrain = (players, duration, position, range) => {
+export const playGrain = (players, duration, position, range, envelope) => {
   if (players.length > 0) {
     console.log("playing grain");
 
@@ -107,6 +108,8 @@ export const playGrain = (players, duration, position, range) => {
 
     const randomIndex = Math.floor(Math.random() * playersInRange.length);
     const grain = playersInRange[randomIndex];
+
+    applyEnvelope([grain], envelope);
 
     grain.start(Tone.now());
     grain.stop(Tone.now() + duration / 1000); // Stop based on updated duration
@@ -124,7 +127,8 @@ export const startPlayback = (
   probability,
   durationRef, // Pass refs instead of functions
   positionRef,
-  rangeRef
+  rangeRef,
+  envelope
 ) => {
   if (!isPlaying) {
     console.log("playback started");
@@ -137,7 +141,7 @@ export const startPlayback = (
       const position = positionRef.current;
       const range = rangeRef.current;
 
-      playGrain(players, duration, position, range);
+      playGrain(players, duration, position, range, envelope);
     }, rate / 1000); // Initial interval based on rate
 
     newLoop.probability = probability;

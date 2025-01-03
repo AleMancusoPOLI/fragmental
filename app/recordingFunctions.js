@@ -35,10 +35,9 @@ export const stopRecording = async (recorder, isRecording, setIsRecording, setRe
   }
 };
 
-
 function encodeWAV(audioBuffer) {
   console.log('audio beffer is ' + audioBuffer);
-  console.log('numb of channels is' + audioBuffer.numberOfChannels);
+  console.log('numb of channels is ' + audioBuffer.numberOfChannels);
 
   const numberOfChannels = audioBuffer.numberOfChannels;
   const sampleRate = audioBuffer.sampleRate;
@@ -66,7 +65,7 @@ function encodeWAV(audioBuffer) {
   }
 
   // Convert to PCM
-  const buffer = new ArrayBuffer(44 + interleaved.length * 2); // WAV header + data
+  const buffer = new ArrayBuffer(44 + interleaved.length * 2); // WAV header (fixed at 44 bytes size) + data
   const view = new DataView(buffer);
 
   // Write WAV header
@@ -87,7 +86,7 @@ function encodeWAV(audioBuffer) {
   // Write interleaved PCM samples
   const offset = 44;
   for (let i = 0; i < interleaved.length; i++) {
-    const sample = Math.max(-1, Math.min(1, interleaved[i])); // Clamp value
+    const sample = Math.max(-1, Math.min(1, interleaved[i])); // Clamp value (from -1 to 1)
     view.setInt16(offset + i * 2, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
   }
 

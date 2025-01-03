@@ -19,7 +19,7 @@ FIXES:
 * fix the performance
 * add info panels on hover --> create info component and show it on hover
 * fix the recording export
-    * can't use it in DAW (probably duration/metadata issues)
-    * recording rate is faster thatn actual play rate
+    * can't use it in DAW (probably duration/metadata issues) - DONE
+    * recording rate is faster than actual play rate
     * recording doesn't record effects
         * solution: separate Recorder component from Player and pass final node to the Recorder

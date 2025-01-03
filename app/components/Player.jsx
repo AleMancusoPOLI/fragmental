@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import * as Tone from "tone";
 import debounce from "lodash/debounce";
 
@@ -12,6 +12,9 @@ import {
 } from "../playerFunctions";
 import { startRecording, stopRecording } from "../recordingFunctions";
 import Slider from "./Slider";
+
+import EnvelopeEditor from "./EnvelopeEditor";
+import { applyEnvelope } from "../envelopeLogic";
 
 function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
@@ -32,6 +35,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     gainNode,
     pitch,
     pitchNode,
+    envelope,
+    curvatures,
   } = state;
   const {
     setIsPlaying,
@@ -50,7 +55,17 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     setGainNode,
     setPitch,
     setPitchNode,
+    setEnvelope,
+    setCurvatures,
   } = setters;
+
+  const handleEnvelopeChange = (newEnvelope) => {
+    setEnvelope(newEnvelope);
+  };
+
+  const handleCurvatureChange = (newCurvatures) => {
+    setCurvatures(newCurvatures);
+  };
 
   const debouncedInitializePlayers = useCallback(
     debounce((url, grainNumber, onGainNodeReady, gainNode, pitchNode) => {
@@ -199,7 +214,15 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     pitchNode.pitch = pitch;
   }, [pitch]);
 
+  // Update envelope when it changes
+  useEffect(() => {
+    if (players) {
+      applyEnvelope(players, envelope);
+    }
+  }, [envelope]);
+
   // HTML
+  // TO DO: move some parts directly to the page
   return (
     <section>
       <div>
@@ -251,7 +274,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
                     probability,
                     durationRef, // Pass refs instead of functions
                     positionRef,
-                    rangeRef
+                    rangeRef, 
+                    envelope
                   );
                 })
                 .catch((err) => {
@@ -319,6 +343,16 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           defaultValue={1}
         />
       </section>
+
+    <div>
+      <h1>ADSR Envelope Editor</h1>
+      <EnvelopeEditor
+        points={envelope}
+        onChange={handleEnvelopeChange}
+        curvatures={curvatures}
+        onCurvatureChange={handleCurvatureChange}
+      />
+    </div>
 
       <div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
         <button
