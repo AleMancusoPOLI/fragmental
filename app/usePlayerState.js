@@ -25,8 +25,8 @@ const usePlayerState = () => {
   // Envelope 
   const [envelope, setEnvelope] = useState([
       { time: 0, amplitude: 0 },
+      { time: 0.1, amplitude: 1 },
       { time: 0.2, amplitude: 1 },
-      { time: 0.3, amplitude: 1 },
       { time: 1, amplitude: 0 }
   ]);
   const [curvatures, setCurvatures] = useState([1, 1, 1]);  // Default curvature values for Attack, Decay, Release

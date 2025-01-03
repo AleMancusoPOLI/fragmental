@@ -219,7 +219,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     if (players) {
       applyEnvelope(players, envelope);
     }
-  }, [envelope]);
+  }, [envelope, players]);
 
   // HTML
   // TO DO: move some parts directly to the page

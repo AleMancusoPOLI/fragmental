@@ -1,6 +1,6 @@
 import * as Tone from "tone";
 
-export const applyEnvelope = (players, envelope, gainNode) => {
+export const applyEnvelope = (players, envelope) => {
   const isValidEnvelope = envelope.every(
     (point) => typeof point.time === "number" && typeof point.amplitude === "number"
   );
@@ -8,7 +8,8 @@ export const applyEnvelope = (players, envelope, gainNode) => {
     console.error("Invalid envelope structure:", envelope);
     return;
   }
-
+  console.log("Applying envelope:", envelope);
+  
   const now = Tone.now();
   players.forEach((player) => {
     if (!player.gainNode) {
@@ -25,3 +26,11 @@ export const applyEnvelope = (players, envelope, gainNode) => {
     });
   });
 };
+
+export const mapEnvelopeToDuration = (envelope, duration) => {
+  return envelope.map((point) => ({
+    time: point.time * duration, 
+    amplitude: point.amplitude,
+  }));
+};
+

@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { applyEnvelope } from "./envelopeLogic";
+import { mapEnvelopeToDuration } from "./envelopeLogic";
 
 // Initialize players and connect to destination
 export const initializePlayers = async (
@@ -43,6 +44,20 @@ export const initializePlayers = async (
   console.log("Recoder's ready!");
 };
 
+// Default envelope based on grain duration
+const initializeEnvelope = (grainDuration) => {
+  const attack = grainDuration * 0.1; // 10% of the grain duration
+  const sustain = grainDuration * 0.6; 
+  const release = grainDuration * 0.3;
+
+  return [
+    { time: 0, amplitude: 0 },
+    { time: attack, amplitude: 1 },
+    { time: attack + sustain, amplitude: 1 },
+    { time: attack + sustain + release, amplitude: 0 },
+  ];
+};
+
 // Create players for all grains
 export const createGrainPlayers = async (url, grainNumber) => {
   const grainPlayers = [];
@@ -82,6 +97,7 @@ export const createGrainPlayers = async (url, grainNumber) => {
         player.fadeOut = fadeTime / 2;
       },
     });
+    player.envelope = initializeEnvelope(grainDuration); // initialize and store the envelope for the grain
     grainPlayers.push(player); // add player to the array
   }
   return grainPlayers;
@@ -96,7 +112,7 @@ const initNodes = async (gain, setGainNode, setPitchNode) => {
 };
 
 // Play a random grain
-export const playGrain = (players, duration, position, range, envelope) => {
+export const playGrain = (players, duration, position, range, envelopeADSR) => {
   if (players.length > 0) {
     console.log("playing grain");
 
@@ -109,6 +125,7 @@ export const playGrain = (players, duration, position, range, envelope) => {
     const randomIndex = Math.floor(Math.random() * playersInRange.length);
     const grain = playersInRange[randomIndex];
 
+    const envelope = mapEnvelopeToDuration(envelopeADSR, duration); // Map envelope
     applyEnvelope([grain], envelope);
 
     grain.start(Tone.now());
