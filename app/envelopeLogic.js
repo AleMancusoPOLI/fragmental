@@ -9,20 +9,14 @@ export const applyEnvelope = (players, envelope, gainNode) => {
     return;
   }
 
-  // Ensure the envelope is sorted by time
-  const sortedEnvelope = [...envelope].sort((a, b) => a.time - b.time);
-
+  const now = Tone.now();
   players.forEach((player) => {
     if (!player.gainNode) {
-      player.gainNode = new Tone.Gain(0);
+      player.gainNode = new Tone.Gain(0).toDestination();
+      player.connect(player.gainNode);
     }
 
-    // Connect the player to the gain node
-    player.connect(player.gainNode);
-
-    // Apply the envelope to the gain node
-    const now = Tone.now();
-    sortedEnvelope.forEach((point, i) => {
+    envelope.forEach((point, i) => {
       if (i === 0) {
         player.gainNode.gain.setValueAtTime(point.amplitude, now + point.time);
       } else {
