@@ -6,13 +6,14 @@ import { useDropzone } from "react-dropzone";
 function Dropzone({ onFileDrop, className }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      if (acceptedFiles && acceptedFiles.length == 1) {
+      console.log("file dropped");
+      if (acceptedFiles && acceptedFiles.length === 1) {
         const file = acceptedFiles[0];
 
         const url = URL.createObjectURL(file);
-        onFileDrop(url); // Pass the file URL to the page
+        onFileDrop(url); // Pass the file URL to the parent
       } else {
-        console.log("Invalid format");
+        console.log("Invalid format or multiple files");
       }
     },
     [onFileDrop]
@@ -20,12 +21,15 @@ function Dropzone({ onFileDrop, className }) {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: { "audio/*": [] }, // constraint on audio format
-    maxFiles: 1, // constraint on number of files at a time
+    accept: { "audio/*": [] }, // Constraint for audio files
+    maxFiles: 1, // Maximum 1 file at a time
   });
 
   return (
-    <div className="m-1 p-2 rounded border-2 border-solid">
+    <div
+      {...getRootProps()} // Attach the dropzone handlers here
+      className={`m-1 p-2 rounded border-2 border-solid ${className}`}
+    >
       <input {...getInputProps()} />
       <div>Drop your sample here</div>
     </div>
