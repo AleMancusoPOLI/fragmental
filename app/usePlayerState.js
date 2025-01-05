@@ -20,8 +20,7 @@ const usePlayerState = () => {
   // Nodes
   const [gain, setGain] = useState(1);
   const [gainNode, setGainNode] = useState(null);
-  const [pitch, setPitch] = useState(0);
-  const [pitchNode, setPitchNode] = useState(null);
+
   // Envelope 
   const [envelope, setEnvelope] = useState([
       { time: 0, amplitude: 0 },
@@ -47,8 +46,6 @@ const usePlayerState = () => {
       isRecording,
       gain,
       gainNode,
-      pitch,
-      pitchNode,
       envelope,
       curvatures,
     },
@@ -67,8 +64,7 @@ const usePlayerState = () => {
       setIsRecording,
       setGain,
       setGainNode,
-      setPitch,
-      setPitchNode,
+
       setEnvelope,
       setCurvatures,
     },

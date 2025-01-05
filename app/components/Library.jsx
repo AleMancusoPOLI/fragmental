@@ -54,16 +54,20 @@ function Library({ onFileSelected }) {
   return (
     <div className="m-1 p-2 rounded border-2 border-solid">
       <p>Or choose a sample from our library:</p>
-      <table>
+      <table className="w-full text-sm text-left rtl:text-right mt-2">
         <tbody>
-          {samples.map((s) => (
-            <tr key={s.id}>
-              <td className="font-bold">{s.name}</td>
-              <td>{s.description}</td>
+          {samples.map((s, index) => (
+            <tr
+              key={s.id}
+              className="bg-white border-b rounded hover:bg-gray-50"
+            >
+              <td className="font-bold text-black">{s.name}</td>
+              <td className="text-gray-500">{s.description}</td>
               <td
                 onClick={() => {
                   playSample(s.url);
                 }}
+                className="text-black cursor-pointer"
               >
                 Play
               </td>
@@ -71,6 +75,7 @@ function Library({ onFileSelected }) {
                 onClick={() => {
                   stopSample();
                 }}
+                className="text-black cursor-pointer"
               >
                 Stop
               </td>

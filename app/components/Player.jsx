@@ -33,8 +33,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     isRecording,
     gain,
     gainNode,
-    pitch,
-    pitchNode,
     envelope,
     curvatures,
   } = state;
@@ -53,8 +51,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     setIsRecording,
     setGain,
     setGainNode,
-    setPitch,
-    setPitchNode,
     setEnvelope,
     setCurvatures,
   } = setters;
@@ -68,7 +64,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   };
 
   const debouncedInitializePlayers = useCallback(
-    debounce((url, grainNumber, onGainNodeReady, gainNode, pitchNode) => {
+    debounce((url, grainNumber, onGainNodeReady, gainNode) => {
       initializePlayers(
         url,
         grainNumber,
@@ -76,9 +72,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         setRecorder,
         gain,
         gainNode,
-        pitchNode,
         setGainNode,
-        setPitchNode,
         onGainNodeReady
       );
     }, 200),
@@ -144,7 +138,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
       grains,
       onGainNodeReady,
       gainNode,
-      pitchNode
     );
 
     // update position and range value based on the new number of grains
@@ -207,12 +200,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     console.log("Gain value changed");
     gainNode.gain.rampTo(gain, 0.01);
   }, [gain]);
-
-  useEffect(() => {
-    if (pitchNode == null) return;
-    console.log("Pitch value changed");
-    pitchNode.pitch = pitch;
-  }, [pitch]);
 
   // Update envelope when it changes
   useEffect(() => {
@@ -326,15 +313,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           max={2}
           step={0.01}
           defaultValue={1}
-        />
-        <Slider
-          label="Pitch"
-          value={pitch}
-          onChange={setPitch}
-          min={-12}
-          max={12}
-          step={0.01}
-          defaultValue={0}
         />
 
         <Slider

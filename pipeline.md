@@ -1,25 +1,24 @@
 1. simple knobs
     - probability DONE
-    - pitch shifting DONE
+    - pitch shifting DISCARDED
     - gain DONE
 2. implement the slider
     - the algorithm DONE
     - the UI DONE (no range, just slider)
 3. recording DONE
 4. export DONE
-5. envelopes
+5. envelopes DONE
 6. effects WIP
    * stand-alone effects
    * multiple effects (ethereal, vintage, etc...)
 8. audio library 
 9. UI/UX
 
-----
-FIXES:
-* fix the performance
-* add info panels on hover --> create info component and show it on hover
+------------------------
+TODO:
+* add right info for Tooltips
+* add more samples (5/6)
+* add right descriptions for samples
 * fix the recording export
-    * can't use it in DAW (probably duration/metadata issues) - DONE
-    * recording rate is faster than actual play rate
     * recording doesn't record effects
         * solution: separate Recorder component from Player and pass final node to the Recorder

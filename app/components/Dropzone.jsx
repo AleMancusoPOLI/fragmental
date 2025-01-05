@@ -3,7 +3,7 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
-function Dropzone({ onFileDrop, className }) {
+function Dropzone({ onFileDrop }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
       console.log("file dropped");
@@ -28,7 +28,7 @@ function Dropzone({ onFileDrop, className }) {
   return (
     <div
       {...getRootProps()} // Attach the dropzone handlers here
-      className={`m-1 p-2 rounded border-2 border-solid ${className}`}
+      className={`m-1 p-2 rounded border-2 border-dashed border-gray-500`}
     >
       <input {...getInputProps()} />
       <div>Drop your sample here</div>
