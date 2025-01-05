@@ -221,6 +221,62 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     }
   }, [envelope, players]);
 
+  const handlePlayButton = (e) => {
+    e.preventDefault();
+    const isRightKey = e.type === "keyup" && e.key === "p"; // edit for key to press
+    const isClick = e.type === "click";
+
+    if (isRightKey || isClick) {
+      if (isPlaying) {
+        stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players);
+      } else {
+        Tone.start()
+          .then(() => {
+            console.log("AudioContext started");
+            startPlayback(
+              players,
+              isPlaying,
+              setIsPlaying,
+              setLoop,
+              rate,
+              probability,
+              durationRef, // Pass refs instead of functions
+              positionRef,
+              rangeRef,
+              envelope,
+              gainNode
+            );
+          })
+          .catch((err) => {
+            console.error("Error starting AudioContext:", err);
+          });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const keyListener = (e) => handlePlayButton(e);
+
+    // Attach the event listener
+    window.addEventListener("keyup", keyListener);
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener("keyup", keyListener);
+    };
+  }, [
+    isPlaying,
+    loop,
+    players,
+    rate,
+    probability,
+    durationRef,
+    positionRef,
+    rangeRef,
+    envelope,
+    gainNode,
+  ]);
+
   // HTML
   // TO DO: move some parts directly to the page
   return (
@@ -255,35 +311,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         ></input>
       </div>
       <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
-        {/* onClick expects a function reference, not the result of calling a function (that's why we use anonymus function) */}
-        <button
-          onClick={() => {
-            if (isPlaying) {
-              stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players);
-            } else {
-              Tone.start()
-                .then(() => {
-                  console.log("AudioContext started");
-                  startPlayback(
-                    players,
-                    isPlaying,
-                    setIsPlaying,
-                    setLoop,
-                    rate,
-                    probability,
-                    durationRef, // Pass refs instead of functions
-                    positionRef,
-                    rangeRef,
-                    envelope,
-                    gainNode
-                  );
-                })
-                .catch((err) => {
-                  console.error("Error starting AudioContext:", err);
-                });
-            }
-          }}
-        >
+        <button onClick={handlePlayButton}>
           {isPlaying ? "Stop" : "Play"}
         </button>
       </div>
