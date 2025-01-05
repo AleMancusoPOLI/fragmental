@@ -269,13 +269,13 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
                     isPlaying,
                     setIsPlaying,
                     setLoop,
-                    playGrain,
                     rate,
                     probability,
                     durationRef, // Pass refs instead of functions
                     positionRef,
-                    rangeRef, 
-                    envelope
+                    rangeRef,
+                    envelope,
+                    gainNode
                   );
                 })
                 .catch((err) => {
@@ -344,15 +344,15 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         />
       </section>
 
-    <div>
-      <h1>ADSR Envelope Editor</h1>
-      <EnvelopeEditor
-        points={envelope}
-        onChange={handleEnvelopeChange}
-        curvatures={curvatures}
-        onCurvatureChange={handleCurvatureChange}
-      />
-    </div>
+      <div>
+        <h1>ADSR Envelope Editor</h1>
+        <EnvelopeEditor
+          points={envelope}
+          onChange={handleEnvelopeChange}
+          curvatures={curvatures}
+          onCurvatureChange={handleCurvatureChange}
+        />
+      </div>
 
       <div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
         <button
