@@ -12,10 +12,12 @@ export const applyEnvelope = (players, envelope) => {
   
   const now = Tone.now();
   players.forEach((player) => {
+    console.log(player.gainNode)
     if (!player.gainNode) {
       player.gainNode = new Tone.Gain(0).toDestination();
       player.connect(player.gainNode);
     }
+    console.log(player.gainNode)
 
     envelope.forEach((point, i) => {
       if (i === 0) {
