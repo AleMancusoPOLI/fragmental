@@ -1,176 +1,172 @@
 import React, { useEffect, useState } from "react";
-import Slider from "./Slider";
 import * as Tone from "tone";
-import Knob from "./Knob";
+import CompositeEffect from "./CompositeEffect";
 
 function Effects({ gainNode }) {
-  const [reverbNode, setReverbNode] = useState(null);
-  const [reverb, setReverb] = useState(0);
-  const [delayNode, setDelayNode] = useState(null);
-  const [delay, setDelay] = useState(0);
-  const [chorusNode, setChorusNode] = useState(null);
-  const [chorus, setChorus] = useState(0);
-  const [crusherNode, setCrusherNode] = useState(null);
-  const [crusher, setCrusher] = useState(1);
-  const [filterNode, setFilterNode] = useState(null);
-  const [darkBright, setDarkBright] = useState(0);
+  const [vintage, setVintage] = useState(0);
+  const [vintageLowPass, setVintageLowPass] = useState(null);
+  const [vintageBitCrusher, setVintageBitCrusher] = useState(null);
+  const [vintageReverb, setVintageReverb] = useState(null);
+
+  const [dreamy, setDreamy] = useState(0);
+  const [dreamyHighPass, setDreamyHighPass] = useState(null);
+  const [dreamyChorus, setDreamyChorus] = useState(null);
+  const [dreamyReverb, setDreamyReverb] = useState(null);
+  const [dreamyDelay, setDreamyDelay] = useState(null);
+
+  const [underwater, setUnderwater] = useState(0);
+  const [underwaterBandPass, setUnderwaterBandPass] = useState(null);
 
   // Initialize effect nodes
   useEffect(() => {
     if (!gainNode) return;
     console.log("Initializing effects");
 
-    const revNode = new Tone.Reverb(2).set({
-      wet: 0,
-    });
-    const delNode = new Tone.FeedbackDelay(0.125, 0.4).set({
-      wet: 0,
-    });
-    const chorNode = new Tone.Chorus(4, 15, 1).set({
-      wet: 0,
-    });
-    const crushNode = new Tone.BitCrusher(16);
-    const filterNode = new Tone.Filter(20000, "allpass");
+    // VINTAGE
+    const vintage_lowPass = new Tone.Filter(20000, "lowpass");
+    const vintage_bitCrusher = new Tone.BitCrusher(3);
+    vintage_bitCrusher.wet.value = 0;
+    const vintage_reverb = new Tone.Reverb(2);
+    vintage_reverb.wet.value = 0;
 
-    setReverbNode(revNode);
-    setDelayNode(delNode);
-    setChorusNode(chorNode);
-    setCrusherNode(crushNode);
-    setFilterNode(filterNode);
+    setVintageLowPass(vintage_lowPass);
+    setVintageBitCrusher(vintage_bitCrusher);
+    setVintageReverb(vintage_reverb);
 
+    // DREAMY
+    const dreamy_highPass = new Tone.Filter(20, "highpass");
+    const dreamy_chorus = new Tone.Chorus(20, 0, 1);
+    const dreamy_reverb = new Tone.Reverb(1.5);
+    dreamy_reverb.wet.value = 0;
+    const dreamy_delay = new Tone.FeedbackDelay(0, 0.5);
+    dreamy_delay.wet.value = 0;
+
+    setDreamyHighPass(dreamy_highPass);
+    setDreamyChorus(dreamy_chorus);
+    setDreamyReverb(dreamy_reverb);
+    setDreamyDelay(dreamy_delay);
+
+    // UNDERWATER
+    const uw_bandPass = new Tone.Filter(20, "bandpass");
+
+    setUnderwaterBandPass(uw_bandPass);
+
+    // Rooting
     gainNode.chain(
-      crushNode,
-      filterNode,
-      chorNode,
-      revNode,
-      delNode,
+      vintage_bitCrusher,
+      vintage_lowPass,
+      vintage_reverb,
+      dreamy_highPass,
+      dreamy_chorus,
+      dreamy_reverb,
+      dreamy_delay,
+      uw_bandPass,
       Tone.getDestination()
     );
 
     return () => {
       console.log("Disposing effects");
-      revNode.dispose();
-      delNode.dispose();
-      chorNode.dispose();
-      crushNode.dispose();
-      filterNode.dispose();
+      vintage_lowPass.dispose();
+      vintage_bitCrusher.dispose();
+      vintage_reverb.dispose();
+      // etc
     };
   }, []);
-
-  useEffect(() => {
-    if (!reverbNode) return;
-    console.log("Changing reverb...", reverb);
-    reverbNode.set({
-      wet: reverb,
-    });
-  }, [reverb]);
-
-  useEffect(() => {
-    if (!delayNode) return;
-    console.log("Changing delay...", delay);
-    delayNode.set({
-      wet: delay,
-    });
-  }, [delay]);
-
-  useEffect(() => {
-    if (!chorusNode) return;
-    console.log("Changing chorus...", chorus);
-    chorusNode.set({
-      wet: chorus,
-    });
-  }, [chorus]);
-
-  useEffect(() => {
-    if (!crusherNode) return;
-    console.log("Changing crusher...", crusher);
-    crusherNode.set({
-      bits: 17 - crusher,
-    });
-  }, [crusher]);
-
-  // Adjust filter based on dark/bright knob
-  useEffect(() => {
-    if (!filterNode) return;
-    console.log("Changing filter...", darkBright);
-
-    if (darkBright < 0) {
-      // Low-pass mode
-      filterNode.set({
-        type: "lowpass",
-        frequency: 20000 * (1 + darkBright), // Scale from 20000 to lower frequencies
-      });
-    } else if (darkBright > 0) {
-      // High-pass mode
-      filterNode.set({
-        type: "highpass",
-        frequency: 20 + (20000 - 20) * darkBright, // Scale from 20 Hz to higher frequencies
-      });
-    } else {
-      // Neutral (bypass)
-      filterNode.set({
-        type: "allpass", // Passes all frequencies
-        frequency: 20000,
-      });
-    }
-  }, [darkBright]);
 
   return (
     <section className="rounded-sm border-solid border-2 border-black p-2">
       <div>
         <div className="flex justify-center">
-          <Knob
-            label="Reverb"
-            value={reverb}
-            onChange={setReverb}
+          <CompositeEffect
+            label="Vintage"
+            value={vintage}
+            onChange={setVintage}
             min={0}
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Description"}
+            description={"Just like grandpa likes it"}
+            effectNodes={[
+              {
+                param: vintageLowPass?.frequency,
+                min: 20000,
+                max: 400,
+              },
+              {
+                param: vintageBitCrusher?.wet,
+                min: 0,
+                max: 0.1,
+              },
+              {
+                param: vintageBitCrusher?.bits,
+                min: 10,
+                max: 2,
+              },
+              {
+                param: vintageReverb?.wet,
+                min: 0,
+                max: 1,
+              },
+            ]}
           />
-          <Knob
-            label="Delay"
-            value={delay}
-            onChange={setDelay}
+          <CompositeEffect
+            label="Dreamy"
+            value={dreamy}
+            onChange={setDreamy}
             min={0}
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Description"}
+            description={"Honk shuu honk shuu"}
+            effectNodes={[
+              {
+                param: dreamyHighPass?.frequency,
+                min: 20,
+                max: 1500,
+              },
+              {
+                param: dreamyChorus?.delayTime,
+                min: 0,
+                max: 2000,
+              },
+              {
+                param: dreamyReverb?.wet,
+                min: 0,
+                max: 0.8,
+              },
+              {
+                param: dreamyDelay?.wet,
+                min: 0,
+                max: 0.5,
+              },
+              {
+                param: dreamyDelay?.delayTime,
+                min: 0,
+                max: 0.25,
+              },
+            ]}
           />
-          <Knob
-            label="Chorus"
-            value={chorus}
-            onChange={setChorus}
+          <CompositeEffect
+            label="Underwater"
+            value={underwater}
+            onChange={setUnderwater}
             min={0}
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Description"}
-          />
-          <Knob
-            label="Crusher"
-            value={crusher}
-            onChange={setCrusher}
-            min={1}
-            max={16}
-            step={0.01}
-            defaultValue={1}
-            description={"Description"}
-          />
-        </div>
-
-        <div className="flex justify-center items-center h-full">
-          <Knob
-            label="Dark/Bright"
-            value={darkBright}
-            onChange={setDarkBright}
-            min={-1}
-            max={1}
-            step={0.01}
-            defaultValue={0}
-            description={"Description"}
+            description={"blub blub blub"}
+            effectNodes={[
+              {
+                param: underwaterBandPass?.frequency,
+                min: 19980,
+                max: 40,
+              },
+              {
+                param: underwaterBandPass?.Q,
+                min: 0.1,
+                max: 0.1,
+              },
+            ]}
           />
         </div>
       </div>
