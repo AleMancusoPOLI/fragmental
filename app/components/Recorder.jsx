@@ -48,7 +48,11 @@ function Recorder({ node }) {
               href={recordedAudioURL}
               target="_blank"
               rel="noopener noreferrer"
-              download="recording.wav"
+              download={`recording-${new Date()
+                .toLocaleDateString("en-GB")
+                .replace(/\//g, "-")}_${new Date()
+                .toLocaleTimeString("en-GB", { hour12: false })
+                .replace(/:/g, "-")}.wav`}
               className="text-blue-800 italic"
               type="audio/wav"
             >
@@ -56,7 +60,7 @@ function Recorder({ node }) {
               Download the result
             </a>
           </p>
-          <audio controls src={recordedAudioURL}></audio>
+          <audio controls controlsList="nodownload" src={recordedAudioURL}></audio>
         </div>
       )}
     </div>

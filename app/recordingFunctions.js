@@ -51,7 +51,7 @@ export const stopRecording = async (
 };
 
 function encodeWAV(audioBuffer) {
-  console.log("audio beffer is " + audioBuffer);
+  console.log("audio buffer is " + audioBuffer);
   console.log("numb of channels is " + audioBuffer.numberOfChannels);
 
   const numberOfChannels = audioBuffer.numberOfChannels;
