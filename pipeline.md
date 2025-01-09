@@ -20,9 +20,6 @@ TODO:
 * add right info for Tooltips
 * add more samples (5/6)
 * add right descriptions for samples - do we need descriptions ? 
-* fix the recording export
-    * recording doesn't record effects
-        * solution: separate Recorder component from Player and pass final node to the Recorder
 * documentation ?
 * fix envelope:
     - add dots info
@@ -31,8 +28,8 @@ TODO:
 
 Prioritized:
 - create composite effects (leave also the stand alone ones? probably not)
-- separate Recorder from Player and root it after the effects have been applied
 - add descriptions to every knob
 - add more samples
 - add description to samples
 - UI and design (background, colors, knobs, sliders…)
+- Parameters name on UI to make it more user friendly

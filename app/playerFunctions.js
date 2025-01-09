@@ -7,7 +7,6 @@ export const initializePlayers = async (
   url,
   grainNumber,
   setPlayers,
-  setRecorder,
   gain,
   gainNode,
   setGainNode,
@@ -23,21 +22,10 @@ export const initializePlayers = async (
     g = await initNodes(gain, setGainNode);
     onGainNodeReady(g);
   }
-  // Creating and connecting the recording instance
-  const recorderInstance = new Tone.Recorder();
-  grainPlayers.forEach((player) => {
-    player.connect(recorderInstance); // Connecting to the recorder
-  });
 
-  g.connect(recorderInstance); // Connecting to the recorder
-
-  // Set players and recoder
+  // Set players
   setPlayers(grainPlayers);
-  setRecorder(recorderInstance);
-
-  // logs
-  console.log("Players're ready!");
-  console.log("Recoder's ready!");
+  console.log("Players ready!");
 };
 
 // Default envelope based on grain duration

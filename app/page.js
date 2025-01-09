@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Import components
 import Dropzone from "./components/Dropzone";
@@ -14,22 +14,35 @@ export default function Home() {
   const [gainNode, setGainNode] = useState(null);
   const [isLibraryOn, seIsLibraryOn] = useState(true); // used for hiding/displaying library
 
+  useEffect(() => {
+    console.log("LIBRARY:", fileUrl);
+    if (fileUrl) seIsLibraryOn(false);
+  }, [fileUrl]);
+
   return (
     <section className="section">
-      <div className="items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold">FRAGMENTAL</p>
         <p className="text-center font-thin">Double click to reset values</p>
-        <p className="text-center font-thin">Click 'Play' or press 'p' on your keyboard to start the playback</p>
-        <button onClick={() => {seIsLibraryOn(!isLibraryOn)}}>
-          {isLibraryOn ? "Show library" : "Close library"}
+        <p className="text-center font-thin">
+          Click 'Play' or press 'p' on your keyboard to start the playback
+        </p>
+        <button
+          onClick={() => {
+            seIsLibraryOn(!isLibraryOn);
+          }}
+        >
+          {isLibraryOn ? "Close library" : "Show library"}
         </button>
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <div className="m-2">
-              <div className="grid grid-cols-2 gap-4">
-                {isLibraryOn && <Dropzone onFileSelected={setFileUrl} /> /*when onFileDrop is called in Dropzone, then setFileUrl is called here with the same argument}*/ }
-                {isLibraryOn && <Library onFileSelected={setFileUrl} />}
-              </div>
+              {isLibraryOn && (
+                <div className="grid grid-cols-1 gap-2 pb-2">
+                  <Dropzone onFileSelected={setFileUrl} />
+                  <Library onFileSelected={setFileUrl} />
+                </div>
+              )}
             </div>
             <Visualizer
               fileUrl={fileUrl}
@@ -43,8 +56,6 @@ export default function Home() {
               />
             )}
             {/* {gainNode && <Effects gainNode={gainNode} />} */}
-            
-            
           </div>
         </div>
         <p className="text-center">Have a nice day :)</p>

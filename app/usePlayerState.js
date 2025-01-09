@@ -13,22 +13,20 @@ const usePlayerState = () => {
   const [duration, setDuration] = useState(250); // Duration in milliseconds
   const [loop, setLoop] = useState(null); // To control the loop
   const [probability, setProbability] = useState(1); // The probability of playing a grain
-  // For the audio recording
-  const [recorder, setRecorder] = useState(null); // For the Tone.js recorder instance
-  const [recordedAudioURL, setRecordedAudioURL] = useState(null); // For saving the recorded audio url
-  const [isRecording, setIsRecording] = useState(false); //For saving the recording state
+
   // Nodes
   const [gain, setGain] = useState(1);
   const [gainNode, setGainNode] = useState(null);
+  const [processedNode, setProcessedNode] = useState(null);
 
-  // Envelope 
+  // Envelope
   const [envelope, setEnvelope] = useState([
-      { time: 0, amplitude: 0 },
-      { time: 0.08, amplitude: 1 },
-      { time: 0.8, amplitude: 1 },
-      { time: 1, amplitude: 0 }
+    { time: 0, amplitude: 0 },
+    { time: 0.08, amplitude: 1 },
+    { time: 0.8, amplitude: 1 },
+    { time: 1, amplitude: 0 },
   ]);
-  const [curvatures, setCurvatures] = useState([1, 1, 1]);  // Default curvature values for Attack, Decay, Release
+  const [curvatures, setCurvatures] = useState([1, 1, 1]); // Default curvature values for Attack, Decay, Release
 
   return {
     state: {
@@ -41,13 +39,11 @@ const usePlayerState = () => {
       duration,
       loop,
       probability,
-      recorder,
-      recordedAudioURL,
-      isRecording,
       gain,
       gainNode,
       envelope,
       curvatures,
+      processedNode,
     },
     setters: {
       setIsPlaying,
@@ -59,14 +55,11 @@ const usePlayerState = () => {
       setDuration,
       setLoop,
       setProbability,
-      setRecorder,
-      setRecordedAudioURL,
-      setIsRecording,
       setGain,
       setGainNode,
-
       setEnvelope,
       setCurvatures,
+      setProcessedNode,
     },
   };
 };

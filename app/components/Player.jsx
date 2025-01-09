@@ -6,17 +6,15 @@ import debounce from "lodash/debounce";
 import usePlayerState from "../usePlayerState";
 import {
   initializePlayers,
-  playGrain,
   startPlayback,
   stopPlayback,
 } from "../playerFunctions";
-import { startRecording, stopRecording } from "../recordingFunctions";
-import Slider from "./Slider";
 import Knob from "./Knob";
 
 import EnvelopeEditor from "./EnvelopeEditor";
 import { applyEnvelope } from "../envelopeLogic";
 import Effects from "./Effects";
+import Recorder from "./Recorder";
 
 function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
@@ -30,13 +28,11 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     duration,
     loop,
     probability,
-    recorder,
-    recordedAudioURL,
-    isRecording,
     gain,
     gainNode,
     envelope,
     curvatures,
+    processedNode,
   } = state;
   const {
     setIsPlaying,
@@ -48,13 +44,11 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     setDuration,
     setLoop,
     setProbability,
-    setRecorder,
-    setRecordedAudioURL,
-    setIsRecording,
     setGain,
     setGainNode,
     setEnvelope,
     setCurvatures,
+    setProcessedNode,
   } = setters;
 
   const handleEnvelopeChange = (newEnvelope) => {
@@ -71,7 +65,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         url,
         grainNumber,
         setPlayers,
-        setRecorder,
         gain,
         gainNode,
         setGainNode,
@@ -135,12 +128,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     if (!fileUrl) return;
     console.log("URL or grain number changed");
     stopPlayback(isPlaying, setIsPlaying, loop, setLoop, players); // limit! is it possible to keep playing while changing the grain number?
-    debouncedInitializePlayers(
-      fileUrl,
-      grains,
-      onGainNodeReady,
-      gainNode,
-    );
+    debouncedInitializePlayers(fileUrl, grains, onGainNodeReady, gainNode);
 
     // update position and range value based on the new number of grains
     let p = position;
@@ -162,8 +150,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     return () => {
       // Dispose players on cleanup
       players.forEach((player) => player.dispose());
-      // dispose recorder
-      if (recorder) recorder.dispose();
     };
   }, [fileUrl, grains, debouncedInitializePlayers]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
@@ -382,44 +368,19 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col items-center">{gainNode && <Effects gainNode={gainNode} />}</div>
-        <div className="flex flex-col items-center"><div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
-          <button
-            onClick={() =>
-              isRecording
-                ? stopRecording(
-                  recorder,
-                  isRecording,
-                  setIsRecording,
-                  setRecordedAudioURL
-                )
-                : startRecording(recorder, isRecording, setIsRecording)
-            }
-          >
-            {isRecording ? "Stop Recording" : "Start Recording"}
-          </button>
-          {recordedAudioURL && ( // checking if recordedAudioURL exists
-            <div>
-              <p>
-                Recording completed.
-                <br />
-                <a
-                  href={recordedAudioURL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download="recording.wav"
-                  className="text-blue-800 italic"
-                  type="audio/wav"
-                >
-                  {" "}
-                  Download the result
-                </a>
-              </p>
-              <audio controls src={recordedAudioURL}></audio>
-            </div>
+        <div className="flex flex-col items-center">
+          {gainNode && (
+            <Effects
+              gainNode={gainNode}
+              onProcessedNodeReady={setProcessedNode}
+            />
           )}
         </div>
-        </div>
+        {processedNode && (
+          <div className="flex flex-col items-center">
+            <Recorder node={processedNode}></Recorder>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as Tone from "tone";
 import CompositeEffect from "./CompositeEffect";
 
-function Effects({ gainNode }) {
+function Effects({ gainNode, onProcessedNodeReady }) {
   const [vintage, setVintage] = useState(0);
   const [vintageLowPass, setVintageLowPass] = useState(null);
   const [vintageBitCrusher, setVintageBitCrusher] = useState(null);
@@ -51,6 +51,7 @@ function Effects({ gainNode }) {
 
     setUnderwaterBandPass(uw_bandPass);
 
+    const processedGain = new Tone.Gain();
     // Rooting
     gainNode.chain(
       vintage_bitCrusher,
@@ -61,8 +62,11 @@ function Effects({ gainNode }) {
       dreamy_reverb,
       dreamy_delay,
       //uw_bandPass,
-      Tone.getDestination()
+      processedGain
     );
+
+    processedGain.connect(Tone.getDestination());
+    onProcessedNodeReady(processedGain);
 
     return () => {
       console.log("Disposing effects");
@@ -76,7 +80,6 @@ function Effects({ gainNode }) {
   return (
     <section className="rounded-sm border-solid border-2 border-black p-2">
       <div>
-      <div className="flex justify-center"><h3>Effects rack</h3></div>
         <div className="flex justify-center">
           <CompositeEffect
             label="Vintage"

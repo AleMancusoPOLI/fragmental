@@ -1,6 +1,16 @@
 import * as Tone from "tone";
 
-// Start the recording 
+// Initialize the recorder
+export const initRecorder = (node, setRecorder) => {
+  const recorderInstance = new Tone.Recorder();
+  node.connect(recorderInstance); // Connecting to the recorder
+
+  // Set players and recoder
+  setRecorder(recorderInstance);
+  console.log("Recorder ready!");
+};
+
+// Start the recording
 export const startRecording = async (recorder, isRecording, setIsRecording) => {
   if (recorder && !isRecording) {
     await Tone.start();
@@ -11,7 +21,12 @@ export const startRecording = async (recorder, isRecording, setIsRecording) => {
 };
 
 // Stop the recording and save the url of the recording
-export const stopRecording = async (recorder, isRecording, setIsRecording, setRecordedAudioURL) => {
+export const stopRecording = async (
+  recorder,
+  isRecording,
+  setIsRecording,
+  setRecordedAudioURL
+) => {
   if (recorder && isRecording) {
     const recording = await recorder.stop();
     console.log("Recording data type:", recording.type); // Expect: "audio/ogg; codecs=opus"
@@ -36,8 +51,8 @@ export const stopRecording = async (recorder, isRecording, setIsRecording, setRe
 };
 
 function encodeWAV(audioBuffer) {
-  console.log('audio beffer is ' + audioBuffer);
-  console.log('numb of channels is ' + audioBuffer.numberOfChannels);
+  console.log("audio beffer is " + audioBuffer);
+  console.log("numb of channels is " + audioBuffer.numberOfChannels);
 
   const numberOfChannels = audioBuffer.numberOfChannels;
   const sampleRate = audioBuffer.sampleRate;
@@ -69,10 +84,10 @@ function encodeWAV(audioBuffer) {
   const view = new DataView(buffer);
 
   // Write WAV header
-  writeString(view, 0, 'RIFF');
+  writeString(view, 0, "RIFF");
   view.setUint32(4, 36 + interleaved.length * 2, true); // Chunk size
-  writeString(view, 8, 'WAVE');
-  writeString(view, 12, 'fmt ');
+  writeString(view, 8, "WAVE");
+  writeString(view, 12, "fmt ");
   view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
   view.setUint16(20, format, true); // Audio format (1 for PCM)
   view.setUint16(22, numberOfChannels, true); // Number of channels
@@ -80,17 +95,21 @@ function encodeWAV(audioBuffer) {
   view.setUint32(28, sampleRate * numberOfChannels * 2, true); // Byte rate
   view.setUint16(32, numberOfChannels * 2, true); // Block align
   view.setUint16(34, bitDepth, true); // Bits per sample
-  writeString(view, 36, 'data');
+  writeString(view, 36, "data");
   view.setUint32(40, interleaved.length * 2, true); // Subchunk2Size
 
   // Write interleaved PCM samples
   const offset = 44;
   for (let i = 0; i < interleaved.length; i++) {
     const sample = Math.max(-1, Math.min(1, interleaved[i])); // Clamp value (from -1 to 1)
-    view.setInt16(offset + i * 2, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+    view.setInt16(
+      offset + i * 2,
+      sample < 0 ? sample * 0x8000 : sample * 0x7fff,
+      true
+    );
   }
 
-  return new Blob([view], { type: 'audio/wav' });
+  return new Blob([view], { type: "audio/wav" });
 }
 
 function writeString(view, offset, string) {
