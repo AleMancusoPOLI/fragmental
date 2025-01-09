@@ -15,7 +15,6 @@ export default function Home() {
   const [isLibraryOn, seIsLibraryOn] = useState(true); // used for hiding/displaying library
 
   useEffect(() => {
-    console.log("LIBRARY:", fileUrl);
     if (fileUrl) seIsLibraryOn(false);
   }, [fileUrl]);
 
@@ -32,17 +31,18 @@ export default function Home() {
             seIsLibraryOn(!isLibraryOn);
           }}
         >
-          {isLibraryOn ? "Close library" : "Show library"}
+          {isLibraryOn ? "Hide library" : "Show library"}
         </button>
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <div className="m-2">
-              {isLibraryOn && (
-                <div className="grid grid-cols-1 gap-2 pb-2">
-                  <Dropzone onFileSelected={setFileUrl} />
-                  <Library onFileSelected={setFileUrl} />
-                </div>
-              )}
+              <div className={"grid grid-cols-1 gap-2 pb-2"}>
+                <Dropzone onFileSelected={setFileUrl} />
+                <Library
+                  className={`${isLibraryOn ? "" : "hidden"}`}
+                  onFileSelected={setFileUrl}
+                />
+              </div>
             </div>
             <Visualizer
               fileUrl={fileUrl}

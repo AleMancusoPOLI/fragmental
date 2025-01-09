@@ -4,7 +4,7 @@ import { getDocs, collection } from "firebase/firestore";
 import { getBlob, ref } from "firebase/storage";
 import * as Tone from "tone"; // Import Tone.js
 
-function Library({ onFileSelected }) {
+function Library({ className, onFileSelected }) {
   const [samples, setSamples] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(null); // Store the current player instance
 
@@ -52,7 +52,7 @@ function Library({ onFileSelected }) {
   };
 
   return (
-    <div className="m-1 p-2 rounded border-2 border-solid">
+    <div className={`${className} m-1 p-2 rounded border-2 border-solid`}>
       <p>Or choose a sample from our library:</p>
       <table className="w-full text-sm text-left rtl:text-right mt-2">
         <tbody>
