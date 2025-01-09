@@ -93,7 +93,7 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
         ))}
       </svg>
       {/* Curvature Controls */}
-      <div>
+      {/* <div>
         <label>Attack Curvature</label>
         <input
           type="range"
@@ -103,8 +103,8 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
           value={curvatures[0]}
           onChange={(e) => handleCurvatureChange(0, e)}
         />
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <label>Decay Curvature</label>
         <input
           type="range"
@@ -125,7 +125,7 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
           value={curvatures[2]}
           onChange={(e) => handleCurvatureChange(2, e)}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

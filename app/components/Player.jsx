@@ -12,9 +12,11 @@ import {
 } from "../playerFunctions";
 import { startRecording, stopRecording } from "../recordingFunctions";
 import Slider from "./Slider";
+import Knob from "./Knob";
 
 import EnvelopeEditor from "./EnvelopeEditor";
 import { applyEnvelope } from "../envelopeLogic";
+import Effects from "./Effects";
 
 function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
@@ -265,7 +267,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   ]);
 
   // HTML
-  // TO DO: move some parts directly to the page
   return (
     <section>
       <div>
@@ -283,119 +284,143 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           }}
         ></input>
       </div>
-      <div>
-        <p>Range: {range}</p>
-        <input
-          type="range"
-          min={0}
-          max={grains}
-          step={1}
-          value={range}
-          onChange={(e) => {
-            setRange(Number(e.target.value));
-            // Move cursor on the visualizer
-          }}
-        ></input>
-      </div>
+
       <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
         <button onClick={handlePlayButton}>
           {isPlaying ? "Stop" : "Play"}
         </button>
       </div>
 
-      <section>
-        <h3>Playback Controls</h3>
-        <Slider
-          label="Gain"
-          value={gain}
-          onChange={setGain}
-          min={0}
-          max={2}
-          step={0.01}
-          defaultValue={1}
-        />
+      <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col items-center">
+          <div>
+            <h1>ADSR Envelope Editor</h1>
+            <EnvelopeEditor
+              points={envelope}
+              onChange={handleEnvelopeChange}
+              curvatures={curvatures}
+              onCurvatureChange={handleCurvatureChange}
+            />
+          </div>
+        </div>
 
-        <Slider
-          label="Grain number"
-          value={grains}
-          onChange={setGrains}
-          min={5}
-          max={100}
-          defaultValue={50}
-        />
-        <Slider
-          label="Playback rate (ms)"
-          value={rate}
-          onChange={setRate}
-          min={100}
-          max={1000}
-          defaultValue={500}
-        />
-        <Slider
-          label="Duration (ms)"
-          value={duration}
-          onChange={setDuration}
-          min={10}
-          max={1000}
-          defaultValue={250}
-        />
-        <Slider
-          label="Probability"
-          value={probability}
-          onChange={setProbability}
-          min={0}
-          max={1}
-          step={0.01}
-          defaultValue={1}
-        />
-      </section>
-
-      <div>
-        <h1>ADSR Envelope Editor</h1>
-        <EnvelopeEditor
-          points={envelope}
-          onChange={handleEnvelopeChange}
-          curvatures={curvatures}
-          onCurvatureChange={handleCurvatureChange}
-        />
+        <div className="flex flex-col items-center">
+          <h3>Playback Controls</h3>
+          {/* Possible to pass knob description  */}
+          {/* <div> */}
+          {/* <p>Range: {range}</p> */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Range"
+                value={range}
+                onChange={(newValue) => {
+                  setRange(newValue);
+                  // Move cursor on the visualizer
+                }}
+                min={0}
+                max={grains}
+                step={1}
+                defaultValue={0} // Example default value
+                description="Adjust the range of the granular synth"
+              />
+            </div>
+            {/* </div> */}
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Gain"
+                value={gain}
+                onChange={setGain}
+                min={0}
+                max={2}
+                step={0.01}
+                defaultValue={1}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Grain number"
+                value={grains}
+                onChange={setGrains}
+                min={5}
+                max={100}
+                defaultValue={50}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Playback rate (ms)"
+                value={rate}
+                onChange={setRate}
+                min={100}
+                max={1000}
+                defaultValue={500}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Duration (ms)"
+                value={duration}
+                onChange={setDuration}
+                min={10}
+                max={1000}
+                defaultValue={250}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Probability"
+                value={probability}
+                onChange={setProbability}
+                min={0}
+                max={1}
+                step={0.01}
+                defaultValue={1}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
-        <button
-          onClick={() =>
-            isRecording
-              ? stopRecording(
+      <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col items-center">{gainNode && <Effects gainNode={gainNode} />}</div>
+        <div className="flex flex-col items-center"><div className="rounded-md border-solid border-2 border-black w-fit px-2 my-1">
+          <button
+            onClick={() =>
+              isRecording
+                ? stopRecording(
                   recorder,
                   isRecording,
                   setIsRecording,
                   setRecordedAudioURL
                 )
-              : startRecording(recorder, isRecording, setIsRecording)
-          }
-        >
-          {isRecording ? "Stop Recording" : "Start Recording"}
-        </button>
-      </div>
-      {recordedAudioURL && ( // checking if recordedAudioURL exists
-        <div>
-          <p>
-            Recording completed.
-            <br />
-            <a
-              href={recordedAudioURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              download="recording.wav"
-              className="text-blue-800 italic"
-              type="audio/wav"
-            >
-              {" "}
-              Download the result
-            </a>
-          </p>
-          <audio controls src={recordedAudioURL}></audio>
+                : startRecording(recorder, isRecording, setIsRecording)
+            }
+          >
+            {isRecording ? "Stop Recording" : "Start Recording"}
+          </button>
+          {recordedAudioURL && ( // checking if recordedAudioURL exists
+            <div>
+              <p>
+                Recording completed.
+                <br />
+                <a
+                  href={recordedAudioURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download="recording.wav"
+                  className="text-blue-800 italic"
+                  type="audio/wav"
+                >
+                  {" "}
+                  Download the result
+                </a>
+              </p>
+              <audio controls src={recordedAudioURL}></audio>
+            </div>
+          )}
         </div>
-      )}
+        </div>
+      </div>
     </section>
   );
 }

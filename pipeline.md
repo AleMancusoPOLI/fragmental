@@ -12,13 +12,14 @@
    * stand-alone effects
    * multiple effects (ethereal, vintage, etc...)
 8. audio library DONE
-9. UI/UX
+9. UI/UX 
+    - adaptivity 
 
 ------------------------
 TODO:
 * add right info for Tooltips
 * add more samples (5/6)
-* add right descriptions for samples
+* add right descriptions for samples - do we need descriptions ? 
 * fix the recording export
     * recording doesn't record effects
         * solution: separate Recorder component from Player and pass final node to the Recorder

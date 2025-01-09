@@ -60,7 +60,7 @@ function Effects({ gainNode }) {
       dreamy_chorus,
       dreamy_reverb,
       dreamy_delay,
-      uw_bandPass,
+      //uw_bandPass,
       Tone.getDestination()
     );
 
@@ -76,6 +76,7 @@ function Effects({ gainNode }) {
   return (
     <section className="rounded-sm border-solid border-2 border-black p-2">
       <div>
+      <div className="flex justify-center"><h3>Effects rack</h3></div>
         <div className="flex justify-center">
           <CompositeEffect
             label="Vintage"

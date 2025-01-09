@@ -44,12 +44,12 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue, descri
   return (
     <div
       id={`knob-${label}`}
-      className="py-3 mx-3 flex flex-col items-center relative group w-20" // fixed width to ensure all knobs look the same
+      className="py-3 mx-3 flex flex-col items-center relative group w-24" // fixed width to ensure all knobs look the same
     >
       <div
         onMouseDown={handleMouseDown}
         onDoubleClick={() => onChange(defaultValue)}
-        className="w-12 h-12 cursor-grab select-none"
+        className="w-15 h-15 cursor-grab select-none"
         style={{
           transform: `rotate(${rotation}deg)`,
         }}
@@ -57,8 +57,8 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue, descri
         <Image
           src="/assets/Knob.png"
           alt="Knob"
-          width={50}
-          height={50}
+          width={70}
+          height={70}
           style={{ pointerEvents: "none" }}
         />
       </div>
