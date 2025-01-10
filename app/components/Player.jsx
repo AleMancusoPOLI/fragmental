@@ -288,7 +288,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
 
     {/* Envelope Section */}
     <div className="flex flex-col items-center">
-      <h1 className="text-lg font-bold mb-2">ADSR Envelope Editor</h1>
       <EnvelopeEditor
         points={envelope}
         onChange={handleEnvelopeChange}
@@ -377,7 +376,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     )}
   </div>
 </section>
-  
+
   );
 }
 

@@ -1,8 +1,30 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, totalDuration }) => {
   const svgRef = useRef();
   const margin = 20;
+
+  const [svgWidth, setSvgWidth] = useState(400); // Initial width
+  const [svgHeight, setSvgHeight] = useState(200); // Initial height
+
+   // Update the SVG dimensions based on window size
+   useEffect(() => {
+    const handleResize = () => {
+      if (svgRef.current) {
+        const newWidth = svgRef.current.clientWidth;
+        const newHeight = svgRef.current.clientHeight;
+        setSvgWidth(newWidth);
+        setSvgHeight(newHeight);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call once on mount to set the initial size
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleDrag = (index, event) => {
     const rect = svgRef.current.getBoundingClientRect();
@@ -39,62 +61,74 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
   };
 
   return (
-    <div>
-      <svg
-        ref={svgRef}
-        width="400"
-        height="200"
-        style={{ border: "2px solid black", backgroundColor: "white" }}
-      >
-        {/* Draw the polyline inside the margin */}
-        <polyline
-          points={points
-            .map(
-              (p) =>
-                `${p.time * (400 - 2 * margin) + margin},${
-                  (1 - p.amplitude) * (200 - 2 * margin) + margin
-                }`
-            )
-            .join(" ")}
-          stroke="blue"
-          fill="none"
-        />
-        {/* Render each point */}
-        {points.map((point, index) => (
-          <g key={index}>
-            <circle
-              cx={point.time * (400 - 2 * margin) + margin}
-              cy={(1 - point.amplitude) * (200 - 2 * margin) + margin}
-              r={index === 0 || index === points.length - 1 ? 8 : 6}
-              fill={index === 0 || index === points.length - 1 ? "gray" : "red"}
-              onMouseDown={(e) => {
-                if (index === 0 || index === points.length - 1) return;
-                e.preventDefault();
-                const moveListener = (moveEvent) => handleDrag(index, moveEvent);
-                const upListener = () => {
-                  window.removeEventListener("mousemove", moveListener);
-                  window.removeEventListener("mouseup", upListener);
-                };
-                window.addEventListener("mousemove", moveListener);
-                window.addEventListener("mouseup", upListener);
-              }}
-            />
-            {index !== 0 && index !== points.length - 1 && (
-              <text
-                x={point.time * (400 - 2 * margin) + margin + 5}
-                y={(1 - point.amplitude) * (200 - 2 * margin) + margin - 5}
-                fontSize="12"
-                fill="black"
-              >
-                {`(${(point.time * totalDuration).toFixed(2)}s, ${(point.amplitude * 100).toFixed(1)}%)`}
-              </text>
-            )}
-          </g>
-        ))}
-      </svg>
+    <div className="flex flex-col bg-gray-900 text-white p-6 rounded-md w-full space-y-4">
+      <p className="text-center font-semibold text-lg">Envelope Editor</p>
+
+      <div ref={svgRef} className="relative w-full h-48">
+        <svg
+          width="100%" // Make the width responsive
+          height="100%" // Make the height responsive
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          style={{
+            border: "2px solid #4B5563",
+            backgroundColor: "#1F2937",
+            borderRadius: "8px",
+          }}
+        >
+          {/* Draw the polyline inside the margin */}
+          <polyline
+            points={points
+              .map(
+                (p) =>
+                  `${p.time * (svgWidth - 2 * margin) + margin},${
+                    (1 - p.amplitude) * (svgHeight - 2 * margin) + margin
+                  }`
+              )
+              .join(" ")}
+            stroke="#3B82F6"
+            fill="none"
+          />
+          {/* Render each point */}
+          {points.map((point, index) => (
+            <g key={index}>
+              <circle
+                cx={point.time * (svgWidth - 2 * margin) + margin}
+                cy={(1 - point.amplitude) * (svgHeight - 2 * margin) + margin}
+                r={index === 0 || index === points.length - 1 ? 8 : 6}
+                fill={index === 0 || index === points.length - 1 ? "#9CA3AF" : "#F87171"}
+                stroke="#1F2937"
+                strokeWidth="2"
+                onMouseDown={(e) => {
+                  if (index === 0 || index === points.length - 1) return;
+                  e.preventDefault();
+                  const moveListener = (moveEvent) => handleDrag(index, moveEvent);
+                  const upListener = () => {
+                    window.removeEventListener("mousemove", moveListener);
+                    window.removeEventListener("mouseup", upListener);
+                  };
+                  window.addEventListener("mousemove", moveListener);
+                  window.addEventListener("mouseup", upListener);
+                }}
+              />
+              {index !== 0 && index !== points.length - 1 && (
+                <text
+                  x={point.time * (svgWidth - 2 * margin) + margin + 5}
+                  y={(1 - point.amplitude) * (svgHeight - 2 * margin) + margin - 5}
+                  fontSize="12"
+                  fill="white"
+                >
+                  {`(${(point.time * totalDuration).toFixed(2)}s, ${(point.amplitude * 100).toFixed(1)}%)`}
+                </text>
+              )}
+            </g>
+          ))}
+        </svg>
+      </div>
+
       {/* Curvature Controls */}
-      {/* <div>
-        <label>Attack Curvature</label>
+      {/* Add custom controls for curvature if required */}
+      {/* <div className="flex flex-col space-y-2">
+        <label className="text-sm">Attack Curvature</label>
         <input
           type="range"
           min="0"
@@ -102,10 +136,11 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
           step="0.1"
           value={curvatures[0]}
           onChange={(e) => handleCurvatureChange(0, e)}
+          className="slider"
         />
-      </div> */}
-      {/* <div>
-        <label>Decay Curvature</label>
+      </div>
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm">Decay Curvature</label>
         <input
           type="range"
           min="0"
@@ -113,10 +148,11 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
           step="0.1"
           value={curvatures[1]}
           onChange={(e) => handleCurvatureChange(1, e)}
+          className="slider"
         />
       </div>
-      <div>
-        <label>Release Curvature</label>
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm">Release Curvature</label>
         <input
           type="range"
           min="0"
@@ -124,6 +160,7 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
           step="0.1"
           value={curvatures[2]}
           onChange={(e) => handleCurvatureChange(2, e)}
+          className="slider"
         />
       </div> */}
     </div>
