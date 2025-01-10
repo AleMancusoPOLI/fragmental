@@ -254,135 +254,130 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
 
   // HTML
   return (
-    <section>
-      <div>
-        <input
-          className="w-full"
-          type="range"
+    <section className="px-4 sm:px-8 lg:px-16 py-4 sm:py-8">
+  <div>
+    {/* Scalable Range Input */}
+    <input
+      className="w-full"
+      type="range"
+      min={0}
+      max={grains - 1}
+      step={1}
+      value={position}
+      onChange={(e) => {
+        setPosition(Number(e.target.value));
+        // Move cursor on the visualizer
+        wavesurferInstance.seekTo(e.target.value / grains);
+      }}
+    />
+  </div>
+
+  {/* Play Button */}
+  <div className="rounded-md border-solid border-2 border-black w-min px-4 py-2 my-4">
+    <button onClick={handlePlayButton}>
+      {isPlaying ? "Stop" : "Play"}
+    </button>
+  </div>
+
+  {/* Row 1: Recorder, Envelope, and Knobs */}
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+    {/* Recorder Section */}
+    <div className="flex flex-col items-center">
+      {processedNode && <Recorder node={processedNode} />}
+    </div>
+
+    {/* Envelope Section */}
+    <div className="flex flex-col items-center">
+      <h1 className="text-lg font-bold mb-2">ADSR Envelope Editor</h1>
+      <EnvelopeEditor
+        points={envelope}
+        onChange={handleEnvelopeChange}
+        curvatures={curvatures}
+        onCurvatureChange={handleCurvatureChange}
+      />
+    </div>
+
+    {/* Knobs Section */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Range"
+          value={range}
+          onChange={(newValue) => setRange(newValue)}
           min={0}
-          max={grains - 1}
+          max={grains}
           step={1}
-          value={position}
-          onChange={(e) => {
-            setPosition(Number(e.target.value));
-            // Move cursor on the visualizer
-            wavesurferInstance.seekTo(e.target.value / grains);
-          }}
-        ></input>
+          defaultValue={0}
+        />
       </div>
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Gain"
+          value={gain}
+          onChange={setGain}
+          min={0}
+          max={2}
+          step={0.01}
+          defaultValue={1}
+        />
+      </div>
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Grain number"
+          value={grains}
+          onChange={setGrains}
+          min={5}
+          max={100}
+          defaultValue={50}
+        />
+      </div>
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Playback rate (ms)"
+          value={rate}
+          onChange={setRate}
+          min={100}
+          max={1000}
+          defaultValue={500}
+        />
+      </div>
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Duration (ms)"
+          value={duration}
+          onChange={setDuration}
+          min={10}
+          max={1000}
+          defaultValue={250}
+        />
+      </div>
+      <div className="flex flex-col items-center">
+        <Knob
+          label="Probability"
+          value={probability}
+          onChange={setProbability}
+          min={0}
+          max={1}
+          step={0.01}
+          defaultValue={1}
+        />
+      </div>
+    </div>
+  </div>
 
-      <div className="rounded-md border-solid border-2 border-black w-min px-2 my-1">
-        <button onClick={handlePlayButton}>
-          {isPlaying ? "Stop" : "Play"}
-        </button>
+  {/* Row 2: Effects */}
+  <div className="mt-8">
+    {gainNode && (
+      <div className="flex flex-col items-center">
+        <Effects
+          gainNode={gainNode}
+          onProcessedNodeReady={setProcessedNode}
+        />
       </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col items-center">
-          <div>
-            <h1>ADSR Envelope Editor</h1>
-            <EnvelopeEditor
-              points={envelope}
-              onChange={handleEnvelopeChange}
-              curvatures={curvatures}
-              onCurvatureChange={handleCurvatureChange}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <h3>Playback Controls</h3>
-          {/* Possible to pass knob description  */}
-          {/* <div> */}
-          {/* <p>Range: {range}</p> */}
-          <div className="grid grid-cols-3 gap-2">
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Range"
-                value={range}
-                onChange={(newValue) => {
-                  setRange(newValue);
-                  // Move cursor on the visualizer
-                }}
-                min={0}
-                max={grains}
-                step={1}
-                defaultValue={0} // Example default value
-                description="Adjust the range of the granular synth"
-              />
-            </div>
-            {/* </div> */}
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Gain"
-                value={gain}
-                onChange={setGain}
-                min={0}
-                max={2}
-                step={0.01}
-                defaultValue={1}
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Grain number"
-                value={grains}
-                onChange={setGrains}
-                min={5}
-                max={100}
-                defaultValue={50}
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Playback rate (ms)"
-                value={rate}
-                onChange={setRate}
-                min={100}
-                max={1000}
-                defaultValue={500}
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Duration (ms)"
-                value={duration}
-                onChange={setDuration}
-                min={10}
-                max={1000}
-                defaultValue={250}
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <Knob
-                label="Probability"
-                value={probability}
-                onChange={setProbability}
-                min={0}
-                max={1}
-                step={0.01}
-                defaultValue={1}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col items-center">
-          {gainNode && (
-            <Effects
-              gainNode={gainNode}
-              onProcessedNodeReady={setProcessedNode}
-            />
-          )}
-        </div>
-        {processedNode && (
-          <div className="flex flex-col items-center">
-            <Recorder node={processedNode}></Recorder>
-          </div>
-        )}
-      </div>
-    </section>
+    )}
+  </div>
+</section>
+  
   );
 }
 
