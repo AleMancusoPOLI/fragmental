@@ -45,7 +45,7 @@ function Recorder({ node }) {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white p-6 rounded-md w-96 space-y-4">
+    <div className="flex flex-col bg-gray-900 text-white p-4 sm:p-6 rounded-md w-full max-w-lg space-y-4 mx-auto">
       {/* Record Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
