@@ -74,7 +74,7 @@ function Recorder({ node }) {
             } transition-all duration-300`}
             style={{
               transition: "all 0.3s ease",
-              borderRadius: isRecording ? "0%" : "50%", // Change to square during recording
+              borderRadius: isRecording ? "10%" : "50%", // Change to square during recording
             }}
           ></div>
           <span className="sr-only">{isRecording ? "Stop" : "Start"} Recording</span>
