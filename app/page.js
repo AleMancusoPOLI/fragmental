@@ -12,16 +12,12 @@ export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
   const [wavesurferInstance, setWavesurferInstance] = useState(null); // Instance of the sample visualizer, used by Player to sync with Visualizer
   const [gainNode, setGainNode] = useState(null);
-  const [isLibraryOn, setIsLibraryOn] = useState(true); // used for hiding/displaying library
-  const [isDropzoneOn, setIsDropzoneOn] = useState(true); // used for hiding/displaying dropzone
+  const [isLibraryOn, seIsLibraryOn] = useState(true); // used for hiding/displaying library
 
   useEffect(() => {
-    if (fileUrl) {
-      setIsLibraryOn(false);
-      setIsDropzoneOn(false);
-    }
+    if (fileUrl) seIsLibraryOn(false);
   }, [fileUrl]);
-  
+
   return (
     <section className="section">
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
@@ -32,34 +28,22 @@ export default function Home() {
         </p>
         <button
           onClick={() => {
-            setIsLibraryOn(!isLibraryOn);
+            seIsLibraryOn(!isLibraryOn);
           }}
         >
           {isLibraryOn ? "Hide library" : "Show library"}
         </button>
-        <button
-          onClick={() => {
-            setIsDropzoneOn(!isDropzoneOn);
-          }}>
-          {isDropzoneOn ? "Hide dropzone" : "Show dropzone"}
-        </button>
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
-          <div className="m-2">
-              <div className={"grid grid-cols-1 gap-2 pb-2"}>
-                {isDropzoneOn && (
-                  <Dropzone onFileSelected={setFileUrl} />
-                )}
-              </div>
-            </div>
             <div className="m-2">
               <div className={"grid grid-cols-1 gap-2 pb-2"}>
-                {isLibraryOn && (
-                  <Library onFileSelected={setFileUrl} />
-                )}
+                <Dropzone onFileSelected={setFileUrl} />
+                <Library
+                  className={`${isLibraryOn ? "" : "hidden"}`}
+                  onFileSelected={setFileUrl}
+                />
               </div>
             </div>
-
             <Visualizer
               fileUrl={fileUrl}
               onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
