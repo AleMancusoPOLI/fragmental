@@ -14,8 +14,11 @@ function Effects({ gainNode, onProcessedNodeReady }) {
   const [dreamyReverb, setDreamyReverb] = useState(null);
   const [dreamyDelay, setDreamyDelay] = useState(null);
 
-  const [underwater, setUnderwater] = useState(0);
-  const [underwaterBandPass, setUnderwaterBandPass] = useState(null);
+  const [robot, setRobot] = useState(0);
+  const [robotHighPass, setRobotHighPass] = useState(null);
+  const [robotFilter, setRobotFilter] = useState(null);
+  const [robotDist, setRobotDist] = useState(null);
+  const [robotReverb, setRobotReverb] = useState(null);
 
   // Initialize effect nodes
   useEffect(() => {
@@ -46,22 +49,34 @@ function Effects({ gainNode, onProcessedNodeReady }) {
     setDreamyReverb(dreamy_reverb);
     setDreamyDelay(dreamy_delay);
 
-    // UNDERWATER
-    const uw_bandPass = new Tone.Filter(20, "bandpass");
+    // ROBOT
+    const robot_highPass = new Tone.Filter(20, "highpass");
+    const robot_filter = new Tone.AutoFilter("4n").start();
+    const robot_dist = new Tone.Chebyshev(50);
+    const robot_reverb = new Tone.Freeverb();
+    robot_reverb.wet.value = 0;
+    robot_reverb.dampening = 1000;
+    robot_reverb.roomSize.value = 0.1;
 
-    setUnderwaterBandPass(uw_bandPass);
+    setRobotHighPass(robot_highPass);
+    setRobotFilter(robot_filter);
+    setRobotDist(robot_dist);
+    setRobotReverb(robot_reverb);
 
     const processedGain = new Tone.Gain();
     // Rooting
     gainNode.chain(
       vintage_bitCrusher,
       vintage_lowPass,
-      vintage_reverb,
+      vintage_reverb, //
       dreamy_highPass,
       dreamy_chorus,
       dreamy_reverb,
-      dreamy_delay,
-      //uw_bandPass,
+      dreamy_delay, //
+      robot_highPass,
+      robot_filter,
+      robot_dist,
+      robot_reverb, //
       processedGain
     );
 
@@ -151,24 +166,54 @@ function Effects({ gainNode, onProcessedNodeReady }) {
             ]}
           />
           <CompositeEffect
-            label="Underwater"
-            value={underwater}
-            onChange={setUnderwater}
+            label="Robot"
+            value={robot}
+            onChange={setRobot}
             min={0}
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"blub blub blub"}
+            description={"Robots can love too </3"}
             effectNodes={[
               {
-                param: underwaterBandPass?.frequency,
+                param: robotFilter?.frequency,
                 min: 19980,
                 max: 40,
               },
               {
-                param: underwaterBandPass?.Q,
-                min: 0.1,
+                param: robotFilter?.depth,
+                min: 1,
+                max: 1,
+              },
+              {
+                param: robotFilter?.wet,
+                min: 0,
+                max: 1,
+              },
+              {
+                param: robotDist?.wet,
+                min: 0,
                 max: 0.1,
+              },
+              {
+                param: { value: robotDist?.order },
+                min: 50,
+                max: 61,
+              },
+              {
+                param: robotHighPass?.frequency,
+                min: 20,
+                max: 800,
+              },
+              {
+                param: robotReverb?.wet,
+                min: 0,
+                max: 0.2,
+              },
+              {
+                param: robotReverb?.roomSize,
+                min: 0.1,
+                max: 0.5,
               },
             ]}
           />
