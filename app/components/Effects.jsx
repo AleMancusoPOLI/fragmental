@@ -73,9 +73,9 @@ function Effects({ gainNode, onProcessedNodeReady }) {
       dreamy_chorus,
       dreamy_reverb,
       dreamy_delay, //
+      robot_dist,
       robot_highPass,
       robot_filter,
-      robot_dist,
       robot_reverb, //
       processedGain
     );
@@ -104,7 +104,9 @@ function Effects({ gainNode, onProcessedNodeReady }) {
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Just like grandpa likes it"}
+            description={
+              "Straight out of a gramophone, with a touch of long reverb"
+            }
             effectNodes={[
               {
                 param: vintageLowPass?.frequency,
@@ -136,7 +138,7 @@ function Effects({ gainNode, onProcessedNodeReady }) {
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Honk shuu honk shuu"}
+            description={"Ethereal vibes supported by a bunch of delay"}
             effectNodes={[
               {
                 param: dreamyHighPass?.frequency,
@@ -173,7 +175,9 @@ function Effects({ gainNode, onProcessedNodeReady }) {
             max={1}
             step={0.01}
             defaultValue={0}
-            description={"Robots can love too </3"}
+            description={
+              "Industrial sound voiced by a lonely robot, pairs well with the Vintage effect"
+            }
             effectNodes={[
               {
                 param: robotFilter?.frequency,
@@ -198,7 +202,7 @@ function Effects({ gainNode, onProcessedNodeReady }) {
               {
                 param: { value: robotDist?.order },
                 min: 50,
-                max: 61,
+                max: 58,
               },
               {
                 param: robotHighPass?.frequency,

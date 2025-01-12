@@ -306,6 +306,9 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               max={grains}
               step={1}
               defaultValue={0}
+              description={
+                "How far away are the grains picked, higher values might result in less coherent sequences"
+              }
             />
           </div>
           <div className="flex flex-col items-center">
@@ -317,6 +320,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               max={2}
               step={0.01}
               defaultValue={1}
+              description={"Overall volume, before effects have been applied"}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -327,6 +331,9 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               min={1}
               max={100}
               defaultValue={50}
+              description={
+                "Total number of grains, also affecting the length of each grain"
+              }
             />
           </div>
           <div className="flex flex-col items-center">
@@ -337,6 +344,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               min={100}
               max={1000}
               defaultValue={500}
+              description={"How fast are grains played one after the other"}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -347,6 +355,9 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               min={10}
               max={1000}
               defaultValue={250}
+              description={
+                "How long is each grain playing for, the envelope length is based on this value"
+              }
             />
           </div>
           <div className="flex flex-col items-center">
@@ -358,6 +369,9 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               max={1}
               step={0.01}
               defaultValue={1}
+              description={
+                "How likely is for every individual node to be skipped"
+              }
             />
           </div>
         </div>
