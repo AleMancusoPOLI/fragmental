@@ -131,17 +131,16 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
     debouncedInitializePlayers(fileUrl, grains, onGainNodeReady, gainNode);
 
     // update position and range value based on the new number of grains
-    let p = position;
-    let r = range;
-    if (position > grains) {
-      p = grains;
-      r = grains;
+    console.log("position:", position, "range:", range, "grains:", grains);
+    if (position >= grains) {
+      setPosition(grains - 1);
     }
-    setPosition(p);
-    setRange(r);
+    if (range >= grains) {
+      setRange(grains);
+    }
 
     // update visualizer based on the new number of grains
-    wavesurferInstance.seekTo(p / grains);
+    wavesurferInstance.seekTo(position / grains);
     wavesurferInstance.setOptions({
       cursorWidth: wavesurferInstance.getWidth() / grains,
     });
