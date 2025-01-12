@@ -3,7 +3,7 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
-function Dropzone({ onFileDrop }) {
+function Dropzone({ onFileSelected }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
       console.log("file dropped");
@@ -11,12 +11,12 @@ function Dropzone({ onFileDrop }) {
         const file = acceptedFiles[0];
 
         const url = URL.createObjectURL(file);
-        onFileDrop(url); // Pass the file URL to the parent
+        onFileSelected(url); // Pass the file URL to the parent
       } else {
         console.log("Invalid format or multiple files");
       }
     },
-    [onFileDrop]
+    [onFileSelected]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
