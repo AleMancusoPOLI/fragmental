@@ -15,7 +15,7 @@ export const initializePlayers = async (
   console.log("Initializing players...", grainNumber);
   // Intermediate function is need to have an async block
   const grainPlayers = await createGrainPlayers(url, grainNumber);
-  let g = null
+  let g = null;
   if (gainNode) {
     g = gainNode;
   } else {
@@ -100,7 +100,8 @@ export const playGrain = (
   position,
   range,
   envelopeADSR,
-  mainGain
+  mainGain,
+  onPlayGrain
 ) => {
   if (players.length > 0) {
     console.log("playing grain");
@@ -119,6 +120,7 @@ export const playGrain = (
     applyEnvelope([grain], envelope, mainGain);
 
     grain.start(Tone.now());
+    onPlayGrain();
     grain.stop(Tone.now() + durationSeconds); // Stop based on updated duration
   }
 };
@@ -135,7 +137,8 @@ export const startPlayback = (
   positionRef,
   rangeRef,
   envelope,
-  mainGain
+  mainGain,
+  onPlayGrain
 ) => {
   if (!isPlaying) {
     console.log("playback started");
@@ -148,7 +151,15 @@ export const startPlayback = (
       const position = positionRef.current;
       const range = rangeRef.current;
 
-      playGrain(players, duration, position, range, envelope, mainGain);
+      playGrain(
+        players,
+        duration,
+        position,
+        range,
+        envelope,
+        mainGain,
+        onPlayGrain
+      );
     }, rate / 1000); // Initial interval based on rate
 
     newLoop.probability = probability;

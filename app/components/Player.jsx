@@ -16,7 +16,7 @@ import { applyEnvelope } from "../envelopeLogic";
 import Effects from "./Effects";
 import Recorder from "./Recorder";
 
-function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -218,7 +218,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               positionRef,
               rangeRef,
               envelope,
-              gainNode
+              gainNode,
+              onPlayGrain
             );
           })
           .catch((err) => {

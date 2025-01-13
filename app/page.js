@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // Import components
 import Dropzone from "./components/Dropzone";
 import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
 import Library from "./components/Library";
+import ExpandingCircle from "./components/ExpandingCircle";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
@@ -14,12 +15,21 @@ export default function Home() {
   const [gainNode, setGainNode] = useState(null);
   const [isLibraryOn, seIsLibraryOn] = useState(true); // used for hiding/displaying library
 
+  const circleRef = useRef();
+
+  const handleCreateCircle = () => {
+    if (circleRef.current) {
+      circleRef.current.createCircle(); // Call this function to create a new circle
+    }
+  };
+
   useEffect(() => {
     if (fileUrl) seIsLibraryOn(false);
   }, [fileUrl]);
 
   return (
     <section className="section">
+      <ExpandingCircle ref={circleRef}></ExpandingCircle>
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold">FRAGMENTAL</p>
         <p className="text-center font-thin">Double click to reset values</p>
@@ -53,9 +63,9 @@ export default function Home() {
                 fileUrl={fileUrl}
                 wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
                 onGainNodeReady={setGainNode}
+                onPlayGrain={handleCreateCircle}
               />
             )}
-            {/* {gainNode && <Effects gainNode={gainNode} />} */}
           </div>
         </div>
         <p className="text-center">Have a nice day :)</p>
