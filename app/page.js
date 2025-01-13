@@ -29,14 +29,13 @@ export default function Home() {
 
   return (
     <section className="section">
-      <ExpandingCircle ref={circleRef}></ExpandingCircle>
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold">FRAGMENTAL</p>
-        {/*<p className="text-center font-thin">Double click to reset values</p>
+        <p className="text-center font-thin">Double click to reset values</p>
         <p className="text-center font-thin">
           Click 'Play' or press 'p' on your keyboard to start the playback
         </p>
-        */}
+
         <button
           onClick={() => {
             seIsLibraryOn(!isLibraryOn);
@@ -58,10 +57,16 @@ export default function Home() {
                 />
               </div>
             </div>
-            <Visualizer
-              fileUrl={fileUrl}
-              onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
-            />
+            <div className="flex justify-between items-center gap-4">
+              {wavesurferInstance && (
+                <ExpandingCircle ref={circleRef}></ExpandingCircle>
+              )}
+              <Visualizer
+                fileUrl={fileUrl}
+                onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
+              />
+            </div>
+
             {wavesurferInstance && (
               <Player
                 fileUrl={fileUrl}
