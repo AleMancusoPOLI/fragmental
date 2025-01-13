@@ -20,6 +20,10 @@ function Effects({ gainNode, onProcessedNodeReady }) {
   const [robotDist, setRobotDist] = useState(null);
   const [robotReverb, setRobotReverb] = useState(null);
 
+  const [bubbly, setBubbly] = useState(0);
+  const [bubblyPhaser, setBubblyPhaser] = useState(null);
+  const [bubblyTremolo, setBubblyTremolo] = useState(null);
+
   // Initialize effect nodes
   useEffect(() => {
     if (!gainNode) return;
@@ -63,6 +67,20 @@ function Effects({ gainNode, onProcessedNodeReady }) {
     setRobotDist(robot_dist);
     setRobotReverb(robot_reverb);
 
+    // FUNKY
+    const bubbly_phaser = new Tone.Phaser({
+      frequency: 0.5,
+      octaves: 2,
+      baseFrequency: 350,
+    });
+    bubbly_phaser.wet.value = 0;
+
+    const bubbly_tremolo = new Tone.Tremolo(9, 0.75).start();
+    bubbly_tremolo.wet.value = 0;
+
+    setBubblyPhaser(bubbly_phaser);
+    setBubblyTremolo(bubbly_tremolo);
+
     const processedGain = new Tone.Gain();
     // Rooting
     gainNode.chain(
@@ -77,6 +95,8 @@ function Effects({ gainNode, onProcessedNodeReady }) {
       robot_highPass,
       robot_filter,
       robot_reverb, //
+      bubbly_phaser,
+      bubbly_tremolo, //
       processedGain
     );
 
@@ -88,7 +108,16 @@ function Effects({ gainNode, onProcessedNodeReady }) {
       vintage_lowPass.dispose();
       vintage_bitCrusher.dispose();
       vintage_reverb.dispose();
-      // etc
+      dreamy_highPass.dispose();
+      dreamy_chorus.dispose();
+      dreamy_reverb.dispose();
+      dreamy_delay.dispose();
+      robot_dist.dispose();
+      robot_highPass.dispose();
+      robot_filter.dispose();
+      robot_reverb.dispose();
+      bubbly_phaser.dispose();
+      bubbly_tremolo.dispose();
     };
   }, []);
 
@@ -218,6 +247,40 @@ function Effects({ gainNode, onProcessedNodeReady }) {
                 param: robotReverb?.roomSize,
                 min: 0.1,
                 max: 0.5,
+              },
+            ]}
+          />
+          <CompositeEffect
+            label="Bubbly"
+            value={bubbly}
+            onChange={setBubbly}
+            min={0}
+            max={1}
+            step={0.01}
+            defaultValue={0}
+            description={
+              "Fizzy vibes with phaser and tremolo, keep at low values for a nice flow"
+            }
+            effectNodes={[
+              {
+                param: bubblyPhaser?.wet,
+                min: 0,
+                max: 1,
+              },
+              {
+                param: bubblyPhaser?.frequency,
+                min: 0.1,
+                max: 10,
+              },
+              {
+                param: bubblyTremolo?.wet,
+                min: 0,
+                max: 1,
+              },
+              {
+                param: bubblyTremolo?.frequency,
+                min: 10,
+                max: 15,
               },
             ]}
           />

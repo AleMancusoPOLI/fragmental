@@ -57,12 +57,9 @@ function Library({ className, onFileSelected }) {
       <table className="w-full text-sm text-left rtl:text-right mt-2">
         <tbody>
           {samples.map((s, index) => (
-            <tr
-              key={s.id}
-              className="bg-white border-b rounded hover:bg-gray-50"
-            >
+            <tr key={s.id} className="border-b rounded hover:bg-gray-50">
               <td className="font-bold text-black">{s.name}</td>
-              <td className="text-gray-500">{s.description}</td>
+              <td className="text-gray-500 text-sm">{s.description}</td>
               <td
                 onClick={() => {
                   playSample(s.url);

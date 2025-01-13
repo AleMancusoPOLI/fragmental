@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const ExpandingCircle = React.forwardRef((props, ref) => {
   const [circles, setCircles] = useState([]);
+  const containerRef = useRef(null);
 
   React.useImperativeHandle(ref, () => ({
     createCircle: () => {
-      const id = Date.now(); // Unique identifier for each circle
-      const randomPosition = {
-        top: Math.random() * 100, // Random top position in percentage
-        left: Math.random() * 100, // Random left position in percentage
-      };
-      setCircles((prevCircles) => [
-        ...prevCircles,
-        { id, createdAt: Date.now(), position: randomPosition },
-      ]);
+      if (containerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const id = Date.now(); // Unique identifier for each circle
+        const randomPosition = {
+          top: Math.random() * containerRect.height, // Random top position inside the container
+          left: Math.random() * containerRect.width, // Random left position inside the container
+        };
+        setCircles((prevCircles) => [
+          ...prevCircles,
+          { id, createdAt: Date.now(), position: randomPosition },
+        ]);
+      }
     },
   }));
 
@@ -30,15 +34,8 @@ const ExpandingCircle = React.forwardRef((props, ref) => {
 
   return (
     <div
-      style={{
-        position: "fixed", // Keeps it fixed in the background
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        zIndex: -1, // Ensures it is behind other content
-      }}
+      ref={containerRef}
+      className="relative w-24 h-24 rounded-xl bg-gray-200 overflow-hidden mx-auto shadow-lg"
     >
       {circles.map((circle) => (
         <Circle
@@ -73,16 +70,13 @@ const Circle = ({ createdAt, position }) => {
   return (
     <div
       style={{
-        position: "absolute",
-        left: `${position.left}%`,
-        top: `${position.top}%`,
-        transform: "translate(-50%, -50%)",
+        left: `${position.left}px`,
+        top: `${position.top}px`,
         width: `${size}px`,
         height: `${size}px`,
-        borderRadius: "50%",
         opacity: opacity,
       }}
-      className="border-4 border-purple-400 border-solid"
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-purple-400"
     ></div>
   );
 };
