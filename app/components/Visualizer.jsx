@@ -45,6 +45,7 @@ function Visualizer({ fileUrl, onSampleReady }) {
 
   return (
     <div
+      className="m-1 px-2"
       ref={waveformContainerRef}
       style={{ width: "100%", height: "100%" }}
     ></div>

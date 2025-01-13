@@ -253,7 +253,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
 
   // HTML
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-4 sm:py-8">
+    <section className="px-2 py-8">
       <div>
         {/* Scalable Range Input */}
         <input
