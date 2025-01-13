@@ -46,6 +46,7 @@ function Recorder({ node }) {
 
   return (
     <div className="flex flex-col bg-gray-900 text-white p-4 sm:p-6 rounded-md w-full max-w-lg space-y-4 mx-auto">
+      <p className="text-center font-semibold text-lg">Recorder</p>
       {/* Record Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -65,7 +66,7 @@ function Recorder({ node }) {
                 )
               : startRecording(recorder, isRecording, setIsRecording)
           }
-          className={`w-10 h-10 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center transition-all duration-300`}
+          className="w-10 h-10 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center transition-all duration-300"
         >
           {/* Inner Circle/Square */}
           <div
@@ -73,18 +74,17 @@ function Recorder({ node }) {
               isRecording ? "bg-red-400" : "bg-red-400 rounded-full"
             } transition-all duration-300`}
             style={{
-              transition: "all 0.3s ease",
-              borderRadius: isRecording ? "10%" : "50%", // Change to square during recording
+              borderRadius: isRecording ? "10%" : "50%", // Slight rounding for square
             }}
           ></div>
           <span className="sr-only">{isRecording ? "Stop" : "Start"} Recording</span>
         </button>
       </div>
-
+  
       {/* Export Section */}
       {recordedAudioURL && (
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <span className="text-lg font-semibold">Export</span>
             <span className="text-sm text-gray-400">WAV format</span>
           </div>
@@ -116,10 +116,10 @@ function Recorder({ node }) {
           </a>
         </div>
       )}
-
+  
       {/* Generated Audio Section */}
       {recordedAudioURL && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <p className="text-sm text-gray-400">Generated Audio:</p>
           <audio
             controls
@@ -130,7 +130,7 @@ function Recorder({ node }) {
         </div>
       )}
     </div>
-  );
+  );  
 }
 
 export default Recorder;

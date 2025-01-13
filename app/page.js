@@ -33,7 +33,8 @@ export default function Home() {
         >
           {isLibraryOn ? "Hide library" : "Show library"}
         </button>
-        <div className="rounded-sm border-solid border-4 border-black">
+        {/* <div className="rounded-sm border-solid border-4 border-black"> */}
+        <div>
           <div className="m-4">
             <div className="m-2">
               <div className={"grid grid-cols-1 gap-2 pb-2"}>
@@ -49,16 +50,18 @@ export default function Home() {
               onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
             />
             {wavesurferInstance && (
-              <Player
-                fileUrl={fileUrl}
-                wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
-                onGainNodeReady={setGainNode}
-              />
+              <div className="flex items-center justify-center space-x-4">
+                <Player
+                  fileUrl={fileUrl}
+                  wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
+                  onGainNodeReady={setGainNode}
+                />
+              </div>
             )}
             {/* {gainNode && <Effects gainNode={gainNode} />} */}
           </div>
         </div>
-        <p className="text-center">Have a nice day :)</p>
+        {/* <p className="text-center">Have a nice day :)</p> */}
       </div>
     </section>
   );

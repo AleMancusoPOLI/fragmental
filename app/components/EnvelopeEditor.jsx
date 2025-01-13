@@ -74,10 +74,10 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
   // };
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white p-4 rounded-md w-full max-w-lg space-y-4 mx-auto">
+    <div className="flex flex-col bg-gray-900 text-white p-4 sm:p-6 rounded-md w-full max-w-lg space-y-4 mx-auto">
       <p className="text-center font-semibold text-lg">Envelope Editor</p>
-
-      <div ref={svgRef} className="relative w-full h-auto">
+  
+      <div ref={svgRef} className="relative w-full h-45">
         <svg
           width="100%"
           height="100%"
@@ -93,8 +93,7 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
             points={points
               .map(
                 (p) =>
-                  `${p.time * (svgWidth - 2 * margin) + margin},${(1 - p.amplitude) * (svgHeight - 2 * margin) + margin
-                  }`
+                  `${p.time * (svgWidth - 2 * margin) + margin},${(1 - p.amplitude) * (svgHeight - 2 * margin) + margin}`
               )
               .join(" ")}
             stroke="#3B82F6"
@@ -127,7 +126,7 @@ const EnvelopeEditor = ({ points, onChange, curvatures, onCurvatureChange, total
         </svg>
       </div>
     </div>
-  );
+  );  
 };
 
 export default EnvelopeEditor;

@@ -272,28 +272,50 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
       </div>
 
       {/* Play Button */}
-      <div className="rounded-md border-solid border-2 border-black w-min px-4 py-2 my-4">
-        <button onClick={handlePlayButton}>
-          {isPlaying ? "Stop" : "Play"}
-        </button>
-      </div>
+      <div className="flex justify-center items-center">
+  <button
+    onClick={handlePlayButton}
+    className="w-14 h-14 bg-blue-500 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 text-white rounded-full flex items-center justify-center transition-all duration-300 shadow-lg transform hover:scale-110 active:scale-95"
+  >
+    {/* Play / Pause Icon */}
+    {isPlaying ? (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-8 h-8 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M6 6H18M6 12H18" // Pause Icon (two vertical bars)
+        />
+      </svg>
+    ) : (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-8 h-8 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M5 3L19 12L5 21V3Z" // Play Icon (triangle)
+        />
+      </svg>
+    )}
+    <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
+  </button>
+</div>
+
 
       {/* Row 1: Recorder, Envelope, and Knobs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-        {/* Recorder Section */}
-        <div className="flex flex-col items-center">
-          {processedNode && <Recorder node={processedNode} />}
-        </div>
-
-        {/* Envelope Section */}
-        <div className="flex flex-col items-center">
-          <EnvelopeEditor
-            points={envelope}
-            onChange={handleEnvelopeChange}
-            curvatures={curvatures}
-            onCurvatureChange={handleCurvatureChange}
-          />
-        </div>
 
         {/* Knobs Section */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -374,6 +396,21 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               }
             />
           </div>
+        </div>
+
+        {/* Envelope Section */}
+        <div className="flex flex-col items-center">
+          <EnvelopeEditor
+            points={envelope}
+            onChange={handleEnvelopeChange}
+            curvatures={curvatures}
+            onCurvatureChange={handleCurvatureChange}
+          />
+        </div>
+
+        {/* Recorder Section */}
+        <div className="flex flex-col items-center">
+          {processedNode && <Recorder node={processedNode} />}
         </div>
       </div>
 
