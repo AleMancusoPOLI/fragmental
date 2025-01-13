@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Tooltip from "./Tooltip";
 
-function Knob({ label, value, onChange, min, max, step = 1, defaultValue, description }) {
+function Knob({ label, value, onChange, min, max, step = 1, defaultValue, description, width=70, height=70 }) {
   const range = max - min;
   const rotation = ((value - min) / range) * 270 - 135; // Map value to rotation (-135° to 135°)
 
@@ -57,8 +57,8 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue, descri
         <Image
           src="/assets/Knob.png"
           alt="Knob"
-          width={70}
-          height={70}
+          width={width}
+          height={height}
           style={{ pointerEvents: "none" }}
         />
       </div>

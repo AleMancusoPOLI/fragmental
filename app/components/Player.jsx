@@ -16,7 +16,7 @@ import { applyEnvelope } from "../envelopeLogic";
 import Effects from "./Effects";
 import Recorder from "./Recorder";
 
-function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -218,7 +218,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               positionRef,
               rangeRef,
               envelope,
-              gainNode
+              gainNode,
+              onPlayGrain
             );
           })
           .catch((err) => {
@@ -254,10 +255,51 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   // HTML
   return (
     <section className="px-2 py-8">
-      <div>
+      {/* First Row */}
+      <div className="flex justify-center items-center gap-6 p-4 bg-gray-900 text-white rounded-md w-full">
+        {/* Play Button */}
+        <button
+          onClick={handlePlayButton}
+          className="w-12 h-12 bg-blue-500 hover:bg-blue-400 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95"
+        >
+          {/* Play / Pause Icon */}
+          {isPlaying ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 6H18M6 12H18" // Pause Icon (two vertical bars)
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 3L19 12L5 21V3Z" // Play Icon (triangle)
+              />
+            </svg>
+          )}
+          <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
+        </button>
+
         {/* Scalable Range Input */}
         <input
-          className="w-full"
+          className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer accent-blue-500"
           type="range"
           min={0}
           max={grains - 1}
@@ -269,54 +311,28 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
             wavesurferInstance.seekTo(e.target.value / grains);
           }}
         />
+
+        {/* Knob Section */}
+        <Knob
+          label="Gain"
+          value={gain}
+          onChange={setGain}
+          min={0}
+          max={2}
+          step={0.01}
+          defaultValue={1}
+          description={"Overall volume, before effects have been applied"}
+          width={50}
+          height={50}
+          className="text-sm"
+        />
       </div>
 
-      {/* Play Button */}
-      <div className="flex justify-center items-center">
-  <button
-    onClick={handlePlayButton}
-    className="w-14 h-14 bg-blue-500 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 text-white rounded-full flex items-center justify-center transition-all duration-300 shadow-lg transform hover:scale-110 active:scale-95"
-  >
-    {/* Play / Pause Icon */}
-    {isPlaying ? (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-8 h-8 text-white"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M6 6H18M6 12H18" // Pause Icon (two vertical bars)
-        />
-      </svg>
-    ) : (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-8 h-8 text-white"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M5 3L19 12L5 21V3Z" // Play Icon (triangle)
-        />
-      </svg>
-    )}
-    <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
-  </button>
-</div>
-
+      {/* Add spacing between rows */}
+      <div className="mt-4"></div>
 
       {/* Row 1: Recorder, Envelope, and Knobs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-
         {/* Knobs Section */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="flex flex-col items-center">
@@ -331,18 +347,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               description={
                 "How far away are the grains picked, higher values might result in less coherent sequences"
               }
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Knob
-              label="Gain"
-              value={gain}
-              onChange={setGain}
-              min={0}
-              max={2}
-              step={0.01}
-              defaultValue={1}
-              description={"Overall volume, before effects have been applied"}
+              width={70}
+              height={70}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -356,6 +362,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               description={
                 "Total number of grains, also affecting the length of each grain"
               }
+              width={70}
+              height={70}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -367,6 +375,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               max={1000}
               defaultValue={500}
               description={"How fast are grains played one after the other"}
+              width={70}
+              height={70}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -380,6 +390,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               description={
                 "How long is each grain playing for, the envelope length is based on this value"
               }
+              width={70}
+              height={70}
             />
           </div>
           <div className="flex flex-col items-center">
@@ -394,6 +406,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               description={
                 "How likely is for every individual node to be skipped"
               }
+              width={70}
+              height={70}
             />
           </div>
         </div>
@@ -414,8 +428,11 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         </div>
       </div>
 
+      {/* Add spacing before the second row */}
+      <div className="mt-8"></div>
+
       {/* Row 2: Effects */}
-      <div className="mt-8">
+      <div>
         {gainNode && (
           <div className="flex flex-col items-center">
             <Effects
@@ -426,6 +443,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
         )}
       </div>
     </section>
+
   );
 }
 
