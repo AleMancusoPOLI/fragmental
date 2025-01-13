@@ -32,10 +32,11 @@ export default function Home() {
       <ExpandingCircle ref={circleRef}></ExpandingCircle>
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold">FRAGMENTAL</p>
-        <p className="text-center font-thin">Double click to reset values</p>
+        {/*<p className="text-center font-thin">Double click to reset values</p>
         <p className="text-center font-thin">
           Click 'Play' or press 'p' on your keyboard to start the playback
         </p>
+        */}
         <button
           onClick={() => {
             seIsLibraryOn(!isLibraryOn);
@@ -47,7 +48,10 @@ export default function Home() {
           <div className="m-4">
             <div className="m-2">
               <div className={"grid grid-cols-1 gap-2 pb-2"}>
-                <Dropzone onFileSelected={setFileUrl} />
+                <Dropzone
+                  className={`${isLibraryOn ? "" : "hidden"}`}
+                  onFileSelected={setFileUrl}
+                />
                 <Library
                   className={`${isLibraryOn ? "" : "hidden"}`}
                   onFileSelected={setFileUrl}

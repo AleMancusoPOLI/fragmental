@@ -21,7 +21,7 @@ const ExpandingCircle = React.forwardRef((props, ref) => {
     const cleanupInterval = setInterval(() => {
       const now = Date.now();
       setCircles((prevCircles) =>
-        prevCircles.filter((circle) => now - circle.createdAt < 3000)
+        prevCircles.filter((circle) => now - circle.createdAt < 4000)
       );
     }, 100);
 
@@ -57,7 +57,7 @@ const Circle = ({ createdAt, position }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const elapsed = Date.now() - createdAt;
-      if (elapsed >= 3000) {
+      if (elapsed >= 4000) {
         clearInterval(interval);
         return;
       }
@@ -68,7 +68,7 @@ const Circle = ({ createdAt, position }) => {
     return () => clearInterval(interval);
   }, [createdAt]);
 
-  const opacity = 0.5 - (Date.now() - createdAt) / 3000;
+  const opacity = 0.4 - (Date.now() - createdAt) / 4000;
 
   return (
     <div
@@ -82,7 +82,7 @@ const Circle = ({ createdAt, position }) => {
         borderRadius: "50%",
         opacity: opacity,
       }}
-      className="border-4 border-purple-500 border-solid"
+      className="border-4 border-purple-400 border-solid"
     ></div>
   );
 };
