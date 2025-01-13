@@ -74,6 +74,7 @@ export default function Home() {
                   fileUrl={fileUrl}
                   wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
                   onGainNodeReady={setGainNode}
+                  onPlayGrain={handleCreateCircle}
                 />
               </div>
             )}

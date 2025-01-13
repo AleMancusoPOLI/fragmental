@@ -152,6 +152,14 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
     };
   }, [fileUrl, grains, debouncedInitializePlayers]); //dependencies (if provided, the effect runs whenever one of those values changes)
 
+  useEffect(() => {
+    if (!wavesurferInstance) return;
+    wavesurferInstance.seekTo(position / grains);
+    wavesurferInstance.setOptions({
+      cursorWidth: wavesurferInstance.getWidth() / grains,
+    });
+  }, [wavesurferInstance]);
+
   // Update loop interval dynamically when rate changes
   useEffect(() => {
     console.log("Rate value changed");
@@ -443,7 +451,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
         )}
       </div>
     </section>
-
   );
 }
 
