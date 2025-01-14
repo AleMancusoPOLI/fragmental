@@ -1,7 +1,18 @@
 import Image from "next/image";
 import Tooltip from "./Tooltip";
 
-function Knob({ label, value, onChange, min, max, step = 1, defaultValue, description, width=70, height=70 }) {
+function Knob({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  defaultValue,
+  description,
+  width = 70,
+  height = 70,
+}) {
   const range = max - min;
   const rotation = ((value - min) / range) * 270 - 135; // Map value to rotation (-135° to 135°)
 
@@ -44,7 +55,7 @@ function Knob({ label, value, onChange, min, max, step = 1, defaultValue, descri
   return (
     <div
       id={`knob-${label}`}
-      className="py-3 mx-3 flex flex-col items-center relative group w-24" // fixed width to ensure all knobs look the same
+      className="pt-3 pb-2 mx-3 flex flex-col items-center relative group w-24" // fixed width to ensure all knobs look the same
     >
       <div
         onMouseDown={handleMouseDown}

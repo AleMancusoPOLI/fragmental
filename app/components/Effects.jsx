@@ -122,7 +122,7 @@ function Effects({ gainNode, onProcessedNodeReady }) {
   }, []);
 
   return (
-    <section className="rounded-sm border-solid border-2 border-black p-2">
+    <section className="bg-gray-200 text-black sm:p2 rounded-md w-full space-y-4">
       <div>
         <div className="flex justify-center">
           <CompositeEffect

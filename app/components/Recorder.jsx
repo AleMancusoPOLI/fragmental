@@ -45,7 +45,7 @@ function Recorder({ node }) {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white p-4 sm:p-6 rounded-md w-full max-w-lg space-y-4 mx-auto">
+    <div className="flex flex-col bg-gray-200 text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto">
       <p className="text-center font-semibold text-lg">Recorder</p>
       {/* Record Section */}
       <div className="flex items-center justify-between">
@@ -77,10 +77,12 @@ function Recorder({ node }) {
               borderRadius: isRecording ? "10%" : "50%", // Slight rounding for square
             }}
           ></div>
-          <span className="sr-only">{isRecording ? "Stop" : "Start"} Recording</span>
+          <span className="sr-only">
+            {isRecording ? "Stop" : "Start"} Recording
+          </span>
         </button>
       </div>
-  
+
       {/* Export Section */}
       {recordedAudioURL && (
         <div className="flex items-center justify-between">
@@ -116,7 +118,7 @@ function Recorder({ node }) {
           </a>
         </div>
       )}
-  
+
       {/* Generated Audio Section */}
       {recordedAudioURL && (
         <div className="flex flex-col gap-4">
@@ -130,7 +132,7 @@ function Recorder({ node }) {
         </div>
       )}
     </div>
-  );  
+  );
 }
 
 export default Recorder;

@@ -43,8 +43,7 @@ export default function Home() {
         >
           {isLibraryOn ? "Hide library" : "Show library"}
         </button>
-        {/* <div className="rounded-sm border-solid border-4 border-black"> */}
-        <div>
+        <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <div className="m-2">
               <div className={"grid grid-cols-1 gap-2 pb-2"}>
@@ -69,7 +68,7 @@ export default function Home() {
             </div>
 
             {wavesurferInstance && (
-              <div className="flex items-center justify-center space-x-4">
+              <div className="">
                 <Player
                   fileUrl={fileUrl}
                   wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
