@@ -286,6 +286,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
                 height="16"
                 fill="currentColor" // Ensures the square is filled
                 stroke="none" // Removes the stroke for a solid square
+                rx="2" // Horizontal radius for rounded corners
+                ry="2" // Vertical radius for rounded corners
               />
             </svg>
           ) : (
