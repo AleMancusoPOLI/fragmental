@@ -15,9 +15,8 @@ import EnvelopeEditor from "./EnvelopeEditor";
 import { applyEnvelope } from "../envelopeLogic";
 import Effects from "./Effects";
 import Recorder from "./Recorder";
-import ExpandingCircle from "./ExpandingCircle";
 
-function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -88,13 +87,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const durationRef = useRef(duration);
   const positionRef = useRef(position);
   const rangeRef = useRef(range);
-  const circleRef = useRef();
-
-  const handleCreateCircle = () => {
-    if (circleRef.current) {
-      circleRef.current.createCircle(); // Call this function to create a new circle
-    }
-  };
 
   const debouncedUpdateDuration = useCallback(
     debounce((duration) => {
@@ -235,7 +227,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
               rangeRef,
               envelope,
               gainNode,
-              handleCreateCircle
+              onPlayGrain
             );
           })
           .catch((err) => {
@@ -330,23 +322,21 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           }}
         />
 
-          {/* Gain Knob */}
-          <Knob
-            label="Gain"
-            value={gain}
-            onChange={setGain}
-            min={0}
-            max={2}
-            step={0.01}
-            defaultValue={1}
-            description={"Overall volume, before effects have been applied"}
-            width={50}
-            height={50}
-            className="text-sm"
-          />
-        </div>
+        {/* Knob Section */}
+        <Knob
+          label="Gain"
+          value={gain}
+          onChange={setGain}
+          min={0}
+          max={2}
+          step={0.01}
+          defaultValue={1}
+          description={"Overall volume, before effects have been applied"}
+          width={50}
+          height={50}
+          className="text-sm"
+        />
       </div>
-
 
       {/* Add spacing between rows */}
       <div className="mt-4"></div>
@@ -446,6 +436,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
             curvatures={curvatures}
             onCurvatureChange={handleCurvatureChange}
           />
+        </div>
 
         {/* Recorder Section */}
         <div className="flex flex-col items-center bg-gray-200 rounded-md">
@@ -467,10 +458,6 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           </div>
         )}
       </div>
-
-      {/* Recorder Section */}
-        {processedNode && <Recorder node={processedNode} />}
-    </div>
     </section>
   );
 }

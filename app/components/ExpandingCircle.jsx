@@ -35,7 +35,7 @@ const ExpandingCircle = React.forwardRef((props, ref) => {
   return (
     <div
       ref={containerRef}
-      className="relative w-36 h-36 rounded-xl bg-gray-300 overflow-hidden mx-auto shadow-lg"
+      className="relative w-24 h-24 rounded-xl bg-gray-200 overflow-hidden mx-auto shadow-lg"
     >
       {circles.map((circle) => (
         <Circle
