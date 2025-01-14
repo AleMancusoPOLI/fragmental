@@ -35,7 +35,7 @@ const ExpandingCircle = React.forwardRef((props, ref) => {
   return (
     <div
       ref={containerRef}
-      className="relative w-24 h-24 rounded-xl bg-gray-200 overflow-hidden mx-auto shadow-lg"
+      className="relative w-28 h-28 rounded-xl overflow-hidden mx-auto shadow-lg ac-color"
     >
       {circles.map((circle) => (
         <Circle
@@ -76,7 +76,7 @@ const Circle = ({ createdAt, position }) => {
         height: `${size}px`,
         opacity: opacity,
       }}
-      className="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-purple-400"
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full border-4 circle-color"
     ></div>
   );
 };

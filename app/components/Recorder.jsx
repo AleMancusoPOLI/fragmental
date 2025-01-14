@@ -45,14 +45,13 @@ function Recorder({ node }) {
   };
 
   return (
-    <div className="flex flex-col text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto"
-    style={{ backgroundColor: "rgb(191, 252, 254)" }}>
-      <p className="text-center font-semibold text-lg">Recorder</p>
+    <div className="flex flex-col text-slate-800 p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto fg-color shadow-lg">
+      <p className="text-center font-bold text-xl">Recorder</p>
       {/* Record Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-lg font-semibold">Record</span>
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-gray-200">
             {isRecording ? "Recording..." : formatDuration(audioDuration)}
           </span>
         </div>
@@ -67,8 +66,7 @@ function Recorder({ node }) {
                 )
               : startRecording(recorder, isRecording, setIsRecording)
           }
-          className="w-10 h-10 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center transition-all duration-300"
-          
+          className="w-10 h-10 bg-gray-800 hover:bg-cyan-900 rounded-full flex items-center justify-center transition-all duration-300"
         >
           {/* Inner Circle/Square */}
           <div
@@ -86,11 +84,11 @@ function Recorder({ node }) {
       </div>
 
       {/* Export Section */}
-      {(
+      {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-lg font-semibold">Export</span>
-            <span className="text-sm text-gray-400">WAV format</span>
+            <span className="text-sm text-gray-200">WAV format</span>
           </div>
           <a
             href={recordedAudioURL}
@@ -101,7 +99,7 @@ function Recorder({ node }) {
               .replace(/\//g, "-")}_${new Date()
               .toLocaleTimeString("en-GB", { hour12: false })
               .replace(/:/g, "-")}.wav`}
-            className="w-10 h-10 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center"
+            className="w-10 h-10 button-color hover:bg-cyan-900 rounded-full flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -119,12 +117,14 @@ function Recorder({ node }) {
             </svg>
           </a>
         </div>
-      )}
+      }
 
       {/* Generated Audio Section */}
       {recordedAudioURL && (
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-gray-400">Generated Audio:</p>
+          <p className="text-lg text-slate-800 font-semibold">
+            Generated Audio:
+          </p>
           <audio
             controls
             controlsList="nodownload"

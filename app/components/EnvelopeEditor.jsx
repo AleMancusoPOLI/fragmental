@@ -88,18 +88,19 @@ const EnvelopeEditor = ({
   // };
 
   return (
-    <div className="flex flex-col text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto"
-    style={{ backgroundColor: "rgb(191, 252, 254)" }}> 
-      <p className="text-center font-semibold text-lg">Envelope Editor</p>
+    <div className="flex flex-col text-slate-800 p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto fg-color shadow-lg">
+      <p className="text-center font-bold text-xl">Envelope Editor</p>
 
-      <div ref={svgRef} className="relative w-full h-45">
+      <div
+        ref={svgRef}
+        className="relative w-full h-45 ac-color rounded-lg shadow-md"
+      >
         <svg
           width="100%"
           height="100%"
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           style={{
             // border: "2px solid #4B5563",
-            backgroundColor: 'rgb(230, 230, 230)',
             borderRadius: "8px",
           }}
         >
@@ -113,39 +114,54 @@ const EnvelopeEditor = ({
                   }`
               )
               .join(" ")}
-            stroke="#3B82F6"
+            stroke="#83c5be"
             fill="none"
-            strokeWidth="2"
+            strokeWidth="3"
           />
           {/* Render points */}
-          {points.map((point, index) => (
-            <g key={index}>
-              <circle
-                cx={point.time * (svgWidth - 2 * margin) + margin}
-                cy={(1 - point.amplitude) * (svgHeight - 2 * margin) + margin}
-                r={index === 0 || index === points.length - 1 ? 8 : 6}
-                fill={
-                  index === 0 || index === points.length - 1
-                    ? "#AE98C4"
-                    : "#9800B7"
-                }
-                // stroke="#1F2937"
-                strokeWidth="2"
-                onMouseDown={(e) => {
-                  if (index === 0 || index === points.length - 1) return;
-                  e.preventDefault();
-                  const moveListener = (moveEvent) =>
-                    handleDrag(index, moveEvent);
-                  const upListener = () => {
-                    window.removeEventListener("mousemove", moveListener);
-                    window.removeEventListener("mouseup", upListener);
-                  };
-                  window.addEventListener("mousemove", moveListener);
-                  window.addEventListener("mouseup", upListener);
-                }}
-              />
-            </g>
-          ))}
+          {points.map((point, index) => {
+            const isFirstOrLast = index === 0 || index === points.length - 1;
+
+            return (
+              <g key={index}>
+                {isFirstOrLast ? (
+                  // Render a semicircle for the first and last points
+                  <path
+                    d={`
+            M ${point.time * (svgWidth - 2 * margin) + margin - 8}, ${
+                      (1 - point.amplitude) * (svgHeight - 2 * margin) + margin
+                    }
+            a 8,8 0 1,1 16,0
+          `}
+                    fill="#1e293b"
+                    strokeWidth="3"
+                  />
+                ) : (
+                  // Render a regular circle for other points
+                  <circle
+                    cx={point.time * (svgWidth - 2 * margin) + margin}
+                    cy={
+                      (1 - point.amplitude) * (svgHeight - 2 * margin) + margin
+                    }
+                    r={7}
+                    fill="#765DD3"
+                    strokeWidth="2"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      const moveListener = (moveEvent) =>
+                        handleDrag(index, moveEvent);
+                      const upListener = () => {
+                        window.removeEventListener("mousemove", moveListener);
+                        window.removeEventListener("mouseup", upListener);
+                      };
+                      window.addEventListener("mousemove", moveListener);
+                      window.addEventListener("mouseup", upListener);
+                    }}
+                  />
+                )}
+              </g>
+            );
+          })}
         </svg>
       </div>
     </div>

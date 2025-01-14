@@ -81,7 +81,9 @@ function Knob({
         <Tooltip description={description} value={value.toFixed(2)} />
       </div>
 
-      <p className="text-sm mt-2 text-center">{label}</p>
+      <p className="text-sm mt-2 text-center font-semibold text-slate-800">
+        {label}
+      </p>
     </div>
   );
 }

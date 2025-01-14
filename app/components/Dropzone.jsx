@@ -28,10 +28,10 @@ function Dropzone({ onFileSelected, className }) {
   return (
     <div
       {...getRootProps()} // Attach the dropzone handlers here
-      className={`${className} m-1 p-2 rounded border-2 border-dashed border-gray-500`}
+      className={`${className} m-1 p-2 rounded border-2 border-dashed border-gray-300`}
     >
       <input {...getInputProps()} />
-      <div>Drop your sample here</div>
+      <div className="text-gray-200">Drop your sample here</div>
     </div>
   );
 }

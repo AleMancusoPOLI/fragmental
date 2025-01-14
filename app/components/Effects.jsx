@@ -122,8 +122,7 @@ function Effects({ gainNode, onProcessedNodeReady }) {
   }, []);
 
   return (
-    <section className="text-black sm:p2 rounded-md w-full space-y-4"
-    style={{ backgroundColor: "rgb(191, 252, 254)" }}>
+    <section className="text-slate-800 sm:p2 rounded-md w-full space-y-4 fg-color shadow-lg">
       <div>
         <div className="flex justify-center">
           <div className="flex flex-col items-center">

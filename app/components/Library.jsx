@@ -52,19 +52,22 @@ function Library({ className, onFileSelected }) {
   };
 
   return (
-    <div className={`${className} m-1 p-2 rounded border-2 border-solid`}>
-      <p>Or choose a sample from our library:</p>
+    <div className={`${className} m-1 p-2 rounded  fg-color`}>
+      <p className="text-slate-800">Or choose a sample from our library:</p>
       <table className="w-full text-sm text-left rtl:text-right mt-2">
         <tbody>
           {samples.map((s, index) => (
-            <tr key={s.id} className="border-b rounded hover:bg-gray-50">
-              <td className="font-bold text-black">{s.name}</td>
-              <td className="text-gray-500 text-sm">{s.description}</td>
+            <tr
+              key={s.id}
+              className="border-b border-cyan-800 rounded hover:bg-cyan-800"
+            >
+              <td className="font-bold text-slate-800">{s.name}</td>
+              <td className="text-gray-600 text-sm">{s.description}</td>
               <td
                 onClick={() => {
                   playSample(s.url);
                 }}
-                className="text-black cursor-pointer"
+                className="text-slate-800 cursor-pointer"
               >
                 Play
               </td>
@@ -72,7 +75,7 @@ function Library({ className, onFileSelected }) {
                 onClick={() => {
                   stopSample();
                 }}
-                className="text-black cursor-pointer"
+                className="text-slate-800 cursor-pointer"
               >
                 Stop
               </td>
@@ -80,7 +83,7 @@ function Library({ className, onFileSelected }) {
                 onClick={() => {
                   onFileSelected(s.url);
                 }}
-                className="text-blue-700 cursor-pointer"
+                className="font-bold cursor-pointer text-white"
               >
                 Select
               </td>
