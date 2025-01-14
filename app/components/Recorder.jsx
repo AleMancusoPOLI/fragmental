@@ -66,7 +66,7 @@ function Recorder({ node }) {
                 )
               : startRecording(recorder, isRecording, setIsRecording)
           }
-          className="w-10 h-10 bg-gray-800 hover:bg-cyan-900 rounded-full flex items-center justify-center transition-all duration-300"
+          className="w-10 h-10 button-color-recorder hover:bg-cyan-900 rounded-full flex items-center justify-center transition-all duration-300"
         >
           {/* Inner Circle/Square */}
           <div
@@ -99,7 +99,7 @@ function Recorder({ node }) {
               .replace(/\//g, "-")}_${new Date()
               .toLocaleTimeString("en-GB", { hour12: false })
               .replace(/:/g, "-")}.wav`}
-            className="w-10 h-10 button-color hover:bg-cyan-900 rounded-full flex items-center justify-center"
+            className="w-10 h-10 button-color-recorder hover:bg-cyan-900 rounded-full flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

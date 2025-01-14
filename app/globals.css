@@ -15,9 +15,15 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  /* color: var(--foreground);
+  background: var(--background); */
   font-family: Arial, Helvetica, sans-serif;
+
+  background-image: url('/assets/background_image.svg');
+  background-size: cover; /* Ensures the image covers the entire area */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+
 }
 
 .transition-tooltip {
@@ -39,7 +45,11 @@ body {
 }
 
 .button-color {
-  background-color: rgb(118, 93, 211);
+  background-color: rgb(8, 145, 178);
+}
+
+.button-color-recorder {
+  background-color: rgb(0, 29.8, 32.5);
 }
 
 .slider-color {
