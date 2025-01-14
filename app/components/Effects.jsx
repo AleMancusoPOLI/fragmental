@@ -122,7 +122,9 @@ function Effects({ gainNode, onProcessedNodeReady }) {
   }, []);
 
   return (
-    <section className="text-slate-800 sm:p2 rounded-md w-full space-y-4 fg-color shadow-lg">
+    <section className="text-slate-800 sm:pt-4 pt-4 rounded-md w-full fg-color shadow-lg">
+      <p className="text-center font-bold text-xl">Effects</p>
+
       <div>
         <div className="flex justify-center">
           <div className="flex flex-col items-center">

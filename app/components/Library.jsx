@@ -52,14 +52,14 @@ function Library({ className, onFileSelected }) {
   };
 
   return (
-    <div className={`${className} m-1 p-2 rounded  fg-color`}>
+    <div className={`${className} m-1 p-2 rounded fg-color`}>
       <p className="text-slate-800">Or choose a sample from our library:</p>
       <table className="w-full text-sm text-left rtl:text-right mt-2">
         <tbody>
           {samples.map((s, index) => (
             <tr
               key={s.id}
-              className="border-b border-cyan-800 rounded hover:bg-cyan-800"
+              className="border-b border-cyan-800 rounded hover:bg-cyan-500"
             >
               <td className="font-bold text-slate-800">{s.name}</td>
               <td className="text-gray-600 text-sm">{s.description}</td>

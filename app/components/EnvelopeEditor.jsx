@@ -12,10 +12,10 @@ const EnvelopeEditor = ({
 
   // Default dimensions
   const defaultWidth = 400;
-  const defaultHeight = 200;
+  const defaultHeight = 185;
 
   const [svgWidth, setSvgWidth] = useState(400); // Initial wdefaultWidth);
-  const [svgHeight, setSvgHeight] = useState(200); // Initial hdefaultHeight);
+  const [svgHeight, setSvgHeight] = useState(185); // Initial hdefaultHeight);
 
   // Update the SVG dimensions based on window size
   useEffect(() => {
