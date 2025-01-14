@@ -43,6 +43,7 @@ export default function Home() {
         >
           {isLibraryOn ? "Hide library" : "Show library"}
         </button>
+        <div style={{ backgroundColor: "rgb(238, 238, 238)" }}>
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <div className="">
@@ -81,7 +82,7 @@ export default function Home() {
           </div>
         </div>
         {}
-      </div>
+      </div></div>
     </section>
   );
 }

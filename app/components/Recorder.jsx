@@ -45,7 +45,8 @@ function Recorder({ node }) {
   };
 
   return (
-    <div className="flex flex-col bg-gray-200 text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto">
+    <div className="flex flex-col text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto"
+    style={{ backgroundColor: "rgb(191, 252, 254)" }}>
       <p className="text-center font-semibold text-lg">Recorder</p>
       {/* Record Section */}
       <div className="flex items-center justify-between">
@@ -67,6 +68,7 @@ function Recorder({ node }) {
               : startRecording(recorder, isRecording, setIsRecording)
           }
           className="w-10 h-10 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center transition-all duration-300"
+          
         >
           {/* Inner Circle/Square */}
           <div

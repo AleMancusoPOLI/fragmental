@@ -88,7 +88,8 @@ const EnvelopeEditor = ({
   // };
 
   return (
-    <div className="flex flex-col bg-gray-200 text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto">
+    <div className="flex flex-col text-black p-4 sm:p-4 rounded-md w-full max-w-lg space-y-4 mx-auto"
+    style={{ backgroundColor: "rgb(191, 252, 254)" }}> 
       <p className="text-center font-semibold text-lg">Envelope Editor</p>
 
       <div ref={svgRef} className="relative w-full h-45">
@@ -97,8 +98,8 @@ const EnvelopeEditor = ({
           height="100%"
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           style={{
-            border: "2px solid #4B5563",
-            backgroundColor: "#1F2937",
+            // border: "2px solid #4B5563",
+            backgroundColor: 'rgb(230, 230, 230)',
             borderRadius: "8px",
           }}
         >
@@ -114,6 +115,7 @@ const EnvelopeEditor = ({
               .join(" ")}
             stroke="#3B82F6"
             fill="none"
+            strokeWidth="2"
           />
           {/* Render points */}
           {points.map((point, index) => (
@@ -124,10 +126,10 @@ const EnvelopeEditor = ({
                 r={index === 0 || index === points.length - 1 ? 8 : 6}
                 fill={
                   index === 0 || index === points.length - 1
-                    ? "#9CA3AF"
-                    : "#F87171"
+                    ? "#AE98C4"
+                    : "#9800B7"
                 }
-                stroke="#1F2937"
+                // stroke="#1F2937"
                 strokeWidth="2"
                 onMouseDown={(e) => {
                   if (index === 0 || index === points.length - 1) return;
