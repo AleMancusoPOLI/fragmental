@@ -82,7 +82,7 @@ function Recorder({ node }) {
       </div>
   
       {/* Export Section */}
-      {recordedAudioURL && (
+      {(
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-lg font-semibold">Export</span>

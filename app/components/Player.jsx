@@ -270,188 +270,198 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
 
   // HTML
   return (
-    <section className="px-2 py-1">
+    <section className="py-1">
       {/* First Row */}
-      <div className="flex justify-center items-center gap-6 p-4 bg-gray-900 text-white rounded-md w-full">
-        {/* Play Button */}
-        <button
-          onClick={handlePlayButton}
-          className="w-12 h-12 bg-blue-500 hover:bg-blue-400 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95"
-        >
-          {/* Play / Pause Icon */}
-          {isPlaying ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 6H18M6 12H18" // Pause Icon (two vertical bars)
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 3L19 12L5 21V3Z" // Play Icon (triangle)
-              />
-            </svg>
-          )}
-          <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
-        </button>
+      <div className="flex items-center gap-4">
+        {/* Expanding Circle */}
+        <div className="flex-shrink-0">
+          <ExpandingCircle ref={circleRef} />
+        </div>
 
-        {/* Scalable Range Input */}
-        <input
-          className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer accent-blue-500"
-          type="range"
-          min={0}
-          max={grains - 1}
-          step={1}
-          value={position}
-          onChange={(e) => {
-            setPosition(Number(e.target.value));
-            // Move cursor on the visualizer
-            wavesurferInstance.seekTo(e.target.value / grains);
-          }}
-        />
+        {/* Gray Block with Controls */}
+        <div className="flex items-center gap-4 bg-gray-900 text-white rounded-md p-4 flex-grow">
+          {/* Play Button */}
+          <button
+            onClick={handlePlayButton}
+            className="w-12 h-12 bg-blue-500 hover:bg-blue-400 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95"
+          >
+            {isPlaying ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 6H18M6 12H18" // Pause Icon (two vertical bars)
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 3L19 12L5 21V3Z" // Play Icon (triangle)
+                />
+              </svg>
+            )}
+            <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
+          </button>
 
-        {/* Knob Section */}
-        <Knob
-          label="Gain"
-          value={gain}
-          onChange={setGain}
-          min={0}
-          max={2}
-          step={0.01}
-          defaultValue={1}
-          description={"Overall volume, before effects have been applied"}
-          width={50}
-          height={50}
-          className="text-sm"
-        />
+          {/* Scalable Range Input */}
+          <input
+            className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+            type="range"
+            min={0}
+            max={grains - 1}
+            step={1}
+            value={position}
+            onChange={(e) => {
+              setPosition(Number(e.target.value));
+              wavesurferInstance.seekTo(e.target.value / grains);
+            }}
+          />
+
+          {/* Gain Knob */}
+          <Knob
+            label="Gain"
+            value={gain}
+            onChange={setGain}
+            min={0}
+            max={2}
+            step={0.01}
+            defaultValue={1}
+            description={"Overall volume, before effects have been applied"}
+            width={50}
+            height={50}
+            className="text-sm"
+          />
+        </div>
       </div>
+
 
       {/* Add spacing between rows */}
       <div className="mt-4"></div>
 
-      {/* Row 1: Recorder, Envelope, and Knobs */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-        {/* Knobs Section */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div className="flex flex-col items-center">
-            <ExpandingCircle ref={circleRef}></ExpandingCircle>
+      {/* Row 1: Playback Knobs, Grain Controls, Envelope Editor */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+
+        {/* Grouped Section for Duration and Playback rate (ms) */}
+        <div className="p-4 bg-green-900 text-white rounded-md">
+          <h3 className="text-lg font-semibold mb-4 text-center">Playback Controls</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Duration (ms)"
+                value={duration}
+                onChange={setDuration}
+                min={10}
+                max={1000}
+                defaultValue={250}
+                description={
+                  "How long is each grain playing for, the envelope length is based on this value"
+                }
+                width={70}
+                height={70}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Playback rate (ms)"
+                value={rate}
+                onChange={setRate}
+                min={100}
+                max={1000}
+                defaultValue={500}
+                description={"How fast are grains played one after the other"}
+                width={70}
+                height={70}
+              />
+            </div>
           </div>
-          <div className="flex flex-col items-center">
-          <Knob
-              label="Range"
-              value={range}
-              onChange={(newValue) => setRange(newValue)}
-              min={0}
-              max={grains}
-              step={1}
-              defaultValue={0}
-              description={
-                "How far away are the grains picked, higher values might result in less coherent sequences"
-              }
-              width={70}
-              height={70}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Knob
-              label="Grain number"
-              value={grains}
-              onChange={setGrains}
-              min={1}
-              max={100}
-              defaultValue={50}
-              description={
-                "Total number of grains, also affecting the length of each grain"
-              }
-              width={70}
-              height={70}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Knob
-              label="Playback rate (ms)"
-              value={rate}
-              onChange={setRate}
-              min={100}
-              max={1000}
-              defaultValue={500}
-              description={"How fast are grains played one after the other"}
-              width={70}
-              height={70}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Knob
-              label="Duration (ms)"
-              value={duration}
-              onChange={setDuration}
-              min={10}
-              max={1000}
-              defaultValue={250}
-              description={
-                "How long is each grain playing for, the envelope length is based on this value"
-              }
-              width={70}
-              height={70}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Knob
-              label="Probability"
-              value={probability}
-              onChange={setProbability}
-              min={0}
-              max={1}
-              step={0.01}
-              defaultValue={1}
-              description={
-                "How likely is for every individual node to be skipped"
-              }
-              width={70}
-              height={70}
-            />
+        </div>
+
+        {/* Grouped Section for Range, Grain Number and Probability"*/}
+        <div className="lg:col-span-2 p-4 bg-blue-900 text-white rounded-md">
+          <h3 className="text-lg font-semibold mb-4 text-center">Grain Controls</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Range"
+                value={range}
+                onChange={(newValue) => setRange(newValue)}
+                min={0}
+                max={grains}
+                step={1}
+                defaultValue={0}
+                description={
+                  "How far away are the grains picked, higher values might result in less coherent sequences"
+                }
+                width={70}
+                height={70}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Grain number"
+                value={grains}
+                onChange={setGrains}
+                min={1}
+                max={100}
+                defaultValue={50}
+                description={
+                  "Total number of grains, also affecting the length of each grain"
+                }
+                width={70}
+                height={70}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Knob
+                label="Probability"
+                value={probability}
+                onChange={setProbability}
+                min={0}
+                max={1}
+                step={0.01}
+                defaultValue={1}
+                description={
+                  "How likely is for every individual node to be skipped"
+                }
+                width={70}
+                height={70}
+              />
+            </div>
           </div>
         </div>
 
         {/* Envelope Section */}
-        <div className="flex flex-col items-center">
           <EnvelopeEditor
             points={envelope}
             onChange={handleEnvelopeChange}
             curvatures={curvatures}
             onCurvatureChange={handleCurvatureChange}
           />
-        </div>
 
-        {/* Recorder Section */}
-        <div className="flex flex-col items-center">
-          {processedNode && <Recorder node={processedNode} />}
-        </div>
-      </div>
-
-      {/* Add spacing before the second row */}
-      <div className="mt-8"></div>
-
-      {/* Row 2: Effects */}
-      <div>
+        {/* Add spacing between rows */}
+      <div className="mt-4"></div>
+</div>
+{/* Row 2: Effects and Recorder */}
+<div className="flex gap-4 w-full">
+      {/* Effects Section */}
+      <div className="flex-1 bg-gray-900 text-white p-4 rounded-md">
+      <h3 className="text-lg font-semibold mb-4 text-center">Effects rack</h3>
         {gainNode && (
           <div className="flex flex-col items-center">
             <Effects
@@ -461,6 +471,10 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
           </div>
         )}
       </div>
+
+      {/* Recorder Section */}
+        {processedNode && <Recorder node={processedNode} />}
+    </div>
     </section>
   );
 }

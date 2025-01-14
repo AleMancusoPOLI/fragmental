@@ -58,7 +58,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="p-4 bg-gray-900 text-white rounded-md w-full flex justify-between items-center gap-4  ">
+            <div className="p-2 bg-gray-900 text-white rounded-md w-full flex justify-between items-center gap-4">
                 {/* {wavesurferInstance && (
                   <ExpandingCircle ref={circleRef}></ExpandingCircle>
                 )} */}
