@@ -357,7 +357,10 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
                 step={1}
                 defaultValue={0}
                 description={
-                  "How far away are the grains picked, higher values might result in less coherent sequences"
+                  <>
+                    <span className="text-center block">Range for selecting grains.</span>
+                    <span className="text-center block mt-0">{' '}Higher values may create less coherent sequences</span>
+                  </>
                 }
                 width={60}
                 height={60}
@@ -419,7 +422,10 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
                 max={1000}
                 defaultValue={505}
                 description={
-                  "How long is each grain playing for, the envelope length is based on this value"
+                  <>
+                    <span className="text-center block">How long each grain plays for.</span>
+                    <span className="text-center block mt-0">{' '}The envelope length is based on this value</span>
+                  </>
                 }
                 width={60}
                 height={60}
