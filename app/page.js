@@ -7,7 +7,7 @@ import Dropzone from "./components/Dropzone";
 import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
 import Library from "./components/Library";
-import ExpandingCircle from "./components/ExpandingCircle";
+// import ExpandingCircle from "./components/ExpandingCircle";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
@@ -17,11 +17,11 @@ export default function Home() {
 
   const circleRef = useRef();
 
-  const handleCreateCircle = () => {
-    if (circleRef.current) {
-      circleRef.current.createCircle(); // Call this function to create a new circle
-    }
-  };
+  // const handleCreateCircle = () => {
+  //   if (circleRef.current) {
+  //     circleRef.current.createCircle(); // Call this function to create a new circle
+  //   }
+  // };
 
   useEffect(() => {
     if (fileUrl) seIsLibraryOn(false);
@@ -57,29 +57,30 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="flex justify-between items-center gap-4">
-              {wavesurferInstance && (
-                <ExpandingCircle ref={circleRef}></ExpandingCircle>
-              )}
+            <div className="p-2 bg-gray-900 text-white rounded-md w-full flex justify-between items-center gap-4">
+              {/* {wavesurferInstance && (
+                  <ExpandingCircle ref={circleRef}></ExpandingCircle>
+                )} */}
               <Visualizer
                 fileUrl={fileUrl}
                 onSampleReady={setWavesurferInstance} // when onSampleReady is called in Dropzone, then setWavesurferInstance is called here with the same argument
               />
             </div>
-
-            {wavesurferInstance && (
-              <div className="">
-                <Player
-                  fileUrl={fileUrl}
-                  wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
-                  onGainNodeReady={setGainNode}
-                  onPlayGrain={handleCreateCircle}
-                />
-              </div>
-            )}
+            <div className="w-full flex justify-between items-center gap-4">
+              {wavesurferInstance && (
+                <div className="">
+                  <Player
+                    fileUrl={fileUrl}
+                    wavesurferInstance={wavesurferInstance} // reference to the visualizer instance in Visualizer
+                    onGainNodeReady={setGainNode}
+                    // onPlayGrain={handleCreateCircle}
+                  />
+                </div>
+              )}{" "}
+            </div>
           </div>
         </div>
-        {/* <p className="text-center">Have a nice day :)</p> */}
+        {}
       </div>
     </section>
   );

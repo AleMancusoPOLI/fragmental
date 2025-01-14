@@ -125,131 +125,138 @@ function Effects({ gainNode, onProcessedNodeReady }) {
     <section className="bg-gray-200 text-black sm:p2 rounded-md w-full space-y-4">
       <div>
         <div className="flex justify-center">
-          <CompositeEffect
-            label="Vintage"
-            value={vintage}
-            onChange={setVintage}
-            min={0}
-            max={1}
-            step={0.01}
-            defaultValue={0}
-            description={
-              "Straight out of a gramophone, with a touch of long reverb"
-            }
-            effectNodes={[
-              {
-                param: vintageLowPass?.frequency,
-                min: 20000,
-                max: 400,
-              },
-              {
-                param: vintageBitCrusher?.wet,
-                min: 0,
-                max: 0.1,
-              },
-              {
-                param: vintageBitCrusher?.bits,
-                min: 10,
-                max: 2,
-              },
-              {
-                param: vintageReverb?.wet,
-                min: 0,
-                max: 1,
-              },
-            ]}
-          />
-          <CompositeEffect
-            label="Dreamy"
-            value={dreamy}
-            onChange={setDreamy}
-            min={0}
-            max={1}
-            step={0.01}
-            defaultValue={0}
-            description={"Ethereal vibes supported by a bunch of delay"}
-            effectNodes={[
-              {
-                param: dreamyHighPass?.frequency,
-                min: 20,
-                max: 1500,
-              },
-              {
-                param: dreamyChorus?.delayTime,
-                min: 0,
-                max: 2000,
-              },
-              {
-                param: dreamyReverb?.wet,
-                min: 0,
-                max: 0.8,
-              },
-              {
-                param: dreamyDelay?.wet,
-                min: 0,
-                max: 0.5,
-              },
-              {
-                param: dreamyDelay?.delayTime,
-                min: 0,
-                max: 0.25,
-              },
-            ]}
-          />
-          <CompositeEffect
-            label="Robot"
-            value={robot}
-            onChange={setRobot}
-            min={0}
-            max={1}
-            step={0.01}
-            defaultValue={0}
-            description={
-              "Industrial sound voiced by a lonely robot, pairs well with the Vintage effect"
-            }
-            effectNodes={[
-              {
-                param: robotFilter?.frequency,
-                min: 19980,
-                max: 40,
-              },
-              {
-                param: robotFilter?.depth,
-                min: 1,
-                max: 1,
-              },
-              {
-                param: robotFilter?.wet,
-                min: 0,
-                max: 1,
-              },
-              {
-                param: robotDist?.wet,
-                min: 0,
-                max: 0.1,
-              },
-              {
-                param: { value: robotDist?.order },
-                min: 50,
-                max: 58,
-              },
-              {
-                param: robotHighPass?.frequency,
-                min: 20,
-                max: 800,
-              },
-              {
-                param: robotReverb?.wet,
-                min: 0,
-                max: 0.2,
-              },
-              {
-                param: robotReverb?.roomSize,
-                min: 0.1,
-                max: 0.5,
-              },
-            ]}
-          />
+          <div className="flex flex-col items-center">
+            <CompositeEffect
+              label="Vintage"
+              value={vintage}
+              onChange={setVintage}
+              min={0}
+              max={1}
+              step={0.01}
+              defaultValue={0}
+              description={
+                "Straight out of a gramophone, with a touch of long reverb"
+              }
+              effectNodes={[
+                {
+                  param: vintageLowPass?.frequency,
+                  min: 20000,
+                  max: 400,
+                },
+                {
+                  param: vintageBitCrusher?.wet,
+                  min: 0,
+                  max: 0.1,
+                },
+                {
+                  param: vintageBitCrusher?.bits,
+                  min: 10,
+                  max: 2,
+                },
+                {
+                  param: vintageReverb?.wet,
+                  min: 0,
+                  max: 1,
+                },
+              ]}
+            />
+          </div>
+          <div className="flex flex-col items-center">
+            <CompositeEffect
+              label="Dreamy"
+              value={dreamy}
+              onChange={setDreamy}
+              min={0}
+              max={1}
+              step={0.01}
+              defaultValue={0}
+              description={"Ethereal vibes supported by a bunch of delay"}
+              effectNodes={[
+                {
+                  param: dreamyHighPass?.frequency,
+                  min: 20,
+                  max: 1500,
+                },
+                {
+                  param: dreamyChorus?.delayTime,
+                  min: 0,
+                  max: 2000,
+                },
+                {
+                  param: dreamyReverb?.wet,
+                  min: 0,
+                  max: 0.8,
+                },
+                {
+                  param: dreamyDelay?.wet,
+                  min: 0,
+                  max: 0.5,
+                },
+                {
+                  param: dreamyDelay?.delayTime,
+                  min: 0,
+                  max: 0.25,
+                },
+              ]}
+            />
+          </div>
+          <div className="flex flex-col items-center">
+            <CompositeEffect
+              label="Robot"
+              value={robot}
+              onChange={setRobot}
+              min={0}
+              max={1}
+              step={0.01}
+              defaultValue={0}
+              description={
+                "Industrial sound voiced by a lonely robot, pairs well with the Vintage effect"
+              }
+              effectNodes={[
+                {
+                  param: robotFilter?.frequency,
+                  min: 19980,
+                  max: 40,
+                },
+                {
+                  param: robotFilter?.depth,
+                  min: 1,
+                  max: 1,
+                },
+                {
+                  param: robotFilter?.wet,
+                  min: 0,
+                  max: 1,
+                },
+                {
+                  param: robotDist?.wet,
+                  min: 0,
+                  max: 0.1,
+                },
+                {
+                  param: { value: robotDist?.order },
+                  min: 50,
+                  max: 58,
+                },
+                {
+                  param: robotHighPass?.frequency,
+                  min: 20,
+                  max: 800,
+                },
+                {
+                  param: robotReverb?.wet,
+                  min: 0,
+                  max: 0.2,
+                },
+                {
+                  param: robotReverb?.roomSize,
+                  min: 0.1,
+                  max: 0.5,
+                },
+              ]}
+            />
+          </div>
+          <div className="flex flex-col items-center"></div>
           <CompositeEffect
             label="Bubbly"
             value={bubbly}
