@@ -32,12 +32,15 @@ export default function Home() {
     <section className="section">
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold">FRAGMENTAL</p>
-        <p className="text-center font-thin">Double click to reset values</p>
         <p className="text-center font-thin">
-          Click 'Play' or press 'p' on your keyboard to start the playback
+          Double click the knobs to reset their values
+        </p>
+        <p className="text-center font-thin">
+          Click the Play button or press 'p' on your keyboard to start the
+          playback
         </p>
 
-        <div className="relative group">
+        <div className="relative group w-min">
           <div
             className="z-10 absolute transform -translate-x-10 -translate-y-2 opacity-0 group-hover:opacity-100 transition-opacity"
             style={{ bottom: "85%" }}
