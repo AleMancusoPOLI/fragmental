@@ -404,7 +404,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
                 onChange={setRate}
                 min={100}
                 max={1000}
-                defaultValue={500}
+                defaultValue={550}
                 description={"How fast are grains played one after the other"}
                 width={60}
                 height={60}
@@ -417,7 +417,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
                 onChange={setDuration}
                 min={10}
                 max={1000}
-                defaultValue={250}
+                defaultValue={505}
                 description={
                   "How long is each grain playing for, the envelope length is based on this value"
                 }

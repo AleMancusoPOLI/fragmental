@@ -9,8 +9,8 @@ const usePlayerState = () => {
   const [position, setPosition] = useState(0); // Start position
   const [range, setRange] = useState(0); // Range of random picking
   const [grains, setGrains] = useState(50); // Number of grains
-  const [rate, setRate] = useState(500); // Rate in milliseconds
-  const [duration, setDuration] = useState(250); // Duration in milliseconds
+  const [rate, setRate] = useState(550); // Rate in milliseconds
+  const [duration, setDuration] = useState(505); // Duration in milliseconds
   const [loop, setLoop] = useState(null); // To control the loop
   const [probability, setProbability] = useState(1); // The probability of playing a grain
 
