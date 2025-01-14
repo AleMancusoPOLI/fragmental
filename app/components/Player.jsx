@@ -264,17 +264,19 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
   return (
     <section className="pt-8">
       {/* First Row */}
-      <div className="flex justify-center items-center gap-6 px-4 bg-gray-200 text-black rounded-md w-full">
+      <div className="flex justify-center items-center gap-6 px-4 text-black rounded-md w-full"
+      style={{ backgroundColor: "rgb(191, 252, 254)" }}>
         {/* Play Button */}
         <button
           onClick={handlePlayButton}
-          className="w-12 h-12 bg-purple-400 hover:bg-purple-300 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95"
-        >
+          className="w-12 h-12 hover:bg-purple-300 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95"
+          style={{ backgroundColor: "rgb(220, 220, 2)" }}>
+  
           {/* Play / Pause Icon */}
           {isPlaying ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-700"
+              className="w-6 h-6 text-gray-100"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -291,7 +293,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-700"
+              className="w-6 h-6 text-gray-100"
               fill="currentColor"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -346,7 +348,9 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
         {/* Knobs Section */}
         <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 rounded-md">
           {/* First Row: 3 Knobs */}
-          <div className="flex justify-center p-2 sm:p-2 gap-6 col-span-3 rounded-md bg-gray-200">
+          <div className="flex justify-center p-2 sm:p-2 gap-6 col-span-3 rounded-md"
+          style={{ backgroundColor: "rgb(191, 252, 254)" }}>
+          
             <div className="flex flex-col items-center">
               <Knob
                 label="Range"
@@ -404,7 +408,8 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
             </div>
           </div>
           {/* Second Row: 2 Knobs */}
-          <div className="flex justify-center gap-16 p-2 sm:p-2 col-span-3 rounded-md bg-gray-200">
+          <div className="flex justify-center gap-16 p-2 sm:p-2 col-span-3 rounded-md"
+          style={{ backgroundColor: "rgb(191, 252, 254)" }}>
             <div className="flex flex-col items-center">
               <Knob
                 label="Playback rate"
@@ -445,7 +450,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
         </div>
 
         {/* Envelope Section */}
-        <div className="flex flex-col items-center bg-gray-200 rounded-md">
+        <div className="flex flex-col items-center  rounded-md">
           <EnvelopeEditor
             points={envelope}
             onChange={handleEnvelopeChange}
@@ -455,7 +460,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
         </div>
 
         {/* Recorder Section */}
-        <div className="flex flex-col items-center bg-gray-200 rounded-md">
+        <div className="flex flex-col items-center  rounded-md">
           {processedNode && <Recorder node={processedNode} />}
         </div>
       </div>
