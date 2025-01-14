@@ -74,7 +74,12 @@ function Knob({
         />
       </div>
 
-      <Tooltip description={description} value={value.toFixed(2)} />
+      <div
+        className="z-10 absolute left-1/2 transform -translate-x-1/2 -translate-y-2 "
+        style={{ bottom: "85%" }}
+      >
+        <Tooltip description={description} value={value.toFixed(2)} />
+      </div>
 
       <p className="text-sm mt-2 text-center">{label}</p>
     </div>

@@ -8,6 +8,7 @@ import Player from "./components/Player";
 import Visualizer from "./components/Visualizer";
 import Library from "./components/Library";
 import ExpandingCircle from "./components/ExpandingCircle";
+import Tooltip from "./components/Tooltip";
 
 export default function Home() {
   const [fileUrl, setFileUrl] = useState(null); // URL of the sample, used both by Visualizer and Player
@@ -36,13 +37,53 @@ export default function Home() {
           Click 'Play' or press 'p' on your keyboard to start the playback
         </p>
 
-        <button
-          onClick={() => {
-            seIsLibraryOn(!isLibraryOn);
-          }}
-        >
-          {isLibraryOn ? "Hide library" : "Show library"}
-        </button>
+        <div className="relative group">
+          <div
+            className="z-10 absolute transform -translate-x-10 -translate-y-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{ bottom: "85%" }}
+          >
+            <Tooltip description={"Show/hide library"} value={""} />
+          </div>
+          <button
+            onClick={() => {
+              seIsLibraryOn(!isLibraryOn);
+            }}
+            className="focus:outline-none"
+          >
+            {isLibraryOn ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-purple-700"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-gray-700"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+
         <div className="rounded-sm border-solid border-4 border-black">
           <div className="m-4">
             <div className="">
