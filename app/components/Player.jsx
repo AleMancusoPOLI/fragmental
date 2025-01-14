@@ -15,8 +15,9 @@ import EnvelopeEditor from "./EnvelopeEditor";
 import { applyEnvelope } from "../envelopeLogic";
 import Effects from "./Effects";
 import Recorder from "./Recorder";
+import ExpandingCircle from "./ExpandingCircle";
 
-function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
+function Player({ fileUrl, wavesurferInstance, onGainNodeReady }) {
   const { state, setters } = usePlayerState();
   const {
     isPlaying,
@@ -87,6 +88,13 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
   const durationRef = useRef(duration);
   const positionRef = useRef(position);
   const rangeRef = useRef(range);
+  const circleRef = useRef();
+
+  const handleCreateCircle = () => {
+    if (circleRef.current) {
+      circleRef.current.createCircle(); // Call this function to create a new circle
+    }
+  };
 
   const debouncedUpdateDuration = useCallback(
     debounce((duration) => {
@@ -227,7 +235,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
               rangeRef,
               envelope,
               gainNode,
-              onPlayGrain
+              handleCreateCircle
             );
           })
           .catch((err) => {
@@ -262,7 +270,7 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
 
   // HTML
   return (
-    <section className="px-2 py-8">
+    <section className="px-2 py-1">
       {/* First Row */}
       <div className="flex justify-center items-center gap-6 p-4 bg-gray-900 text-white rounded-md w-full">
         {/* Play Button */}
@@ -344,7 +352,10 @@ function Player({ fileUrl, wavesurferInstance, onGainNodeReady, onPlayGrain }) {
         {/* Knobs Section */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="flex flex-col items-center">
-            <Knob
+            <ExpandingCircle ref={circleRef}></ExpandingCircle>
+          </div>
+          <div className="flex flex-col items-center">
+          <Knob
               label="Range"
               value={range}
               onChange={(newValue) => setRange(newValue)}
