@@ -70,7 +70,7 @@ function Recorder({ node }) {
         >
           {/* Inner Circle/Square */}
           <div
-            className={`w-5 h-5 ${
+            className={`w-4 h-4 ${
               isRecording ? "bg-red-400" : "bg-red-400 rounded-full"
             } transition-all duration-300`}
             style={{
