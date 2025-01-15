@@ -1,6 +1,11 @@
 ## What is Fragmental?
 Fragmental is a web-based granular synthesizer that allows users to explore granular synthesis creatively without requiring deep technical knowledge.
 
+## What is granular synthesis?
+Granular synthesis is a sound processing technique that involves splitting audio into small 'grains' and manipulating them to create new textures, tones, and effects. It's widely used in music production and sound design.
+
+![alt text](public/assets/rm_screen.png)
+
 ## If you want to run the app locally
 
 Install the necessary dependencies (if needed):
@@ -15,11 +20,6 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## What is granular synthesis?
-Granular synthesis is a sound processing technique that involves splitting audio into small 'grains' and manipulating them to create new textures, tones, and effects. It's widely used in music production and sound design.
-
-![alt text](public/assets/rm_screen.png)
 
 ## Cut the chatter, let's get to it
 There are two ways to begin exploring Fragmental. The first option involves using the dropzone, where you can upload your own sample to the synthesizer. If you doubt which sample to use, we recommend trying pads, sounds with smooth transitions or longer chords. If you prefer to dive right in or don’t have your own sample collection, no problem — you can pick one from the library!
