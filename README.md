@@ -1,6 +1,21 @@
 ## What is Fragmental?
 Fragmental is a web-based granular synthesizer that allows users to explore granular synthesis creatively without requiring deep technical knowledge.
 
+## If you want to run the app locally
+
+Install the necessary dependencies (if needed):
+```bash
+npm install next react react-dom
+npm install
+```
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
 ## What is granular synthesis?
 Granular synthesis is a sound processing technique that involves splitting audio into small 'grains' and manipulating them to create new textures, tones, and effects. It's widely used in music production and sound design.
 
@@ -50,21 +65,6 @@ The composite effects created until now are:
 - Bubbly (Phaser, Tremolo), for a funky and wobbly effect.
 
 ![alt text](public/assets/rm_effects.png)
-
-## If you want to run the app locally
-
-Install the necessary dependencies (if needed):
-```bash
-npm install next react react-dom
-npm install
-```
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Docs:
 https://react-dropzone.js.org/
