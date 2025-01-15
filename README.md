@@ -56,7 +56,7 @@ The composite effects created until now are:
 Install the necessary dependencies (if needed):
 ```bash
 npm install next react react-dom
-npm install firebase
+npm install
 ```
 Run the development server:
 
