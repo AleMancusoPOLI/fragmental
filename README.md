@@ -27,22 +27,21 @@ There are two ways to begin exploring Fragmental. The first option involves usin
 ![alt text](public/assets/rm_start_page.png)
 
 ## Hit play and let magic happen 
-At the top of the screen you can interact with the uploaded sample via a waveform window and a slider. The position of the slider indicates a grain from which a playback is started. It is basically a pivot point for all the next algorithms in audio processing.
-For making the user experience more fun and interactive, the visual effect window on the left was added. It shows the grain behaviour, synced with the playback. 
+At the top of the screen, you can interact with the uploaded sample using a waveform window and a slider. The position of the slider indicates the grain from which playback starts, serving as a pivot point for all subsequent audio processing algorithms. To make the user experience more engaging and interactive, a visual effects window on the left has been added. It displays the grain's behavior, synchronized with the playback.
 ![alt text](public/assets/rm_top.png)
 
 ## Knobs rack 
-On the left of the page the knobs rack is located. It is splitted in two parts. The one above is responsible for the grain settings, one below is responsible for the playback rate and duration of each grain. 
-- Range - range for selecting grains.
-- Grain size - length of each grain, also affecting the total number of grains
-- Probability - how likely is for every individual node to be skipped
-- Playback rate - describes how fast are grains played one after the other
-- Duration - how long each grain plays for
+On the left side of the page, the knob rack is located. It is split into two parts: the upper section controls the grain settings, while the lower section manages the playback rate and duration of each grain.
+- Range - defines the range for selecting grains;
+- Grain size - specifies the length of each grain, which also affects the total number of grains;
+- Probability - determines the likelihood of each individual node being skipped;
+- Playback rate - controls how quickly grains are played one after another;
+- Duration - sets how long each grain plays.
 
 ![alt text](public/assets/rm_knobs_rack.png)
 
 ## Envelope
-Envelope is used to shape and control how a sound velocity behaves. For this project ADSR envelope was used.  
+An envelope is used to shape and control how a sound's velocity behaves. For this project an ADSR envelope was utilized.  
 - Attack: the time it takes for the sound to reach its maximum level after being triggered;
 - Decay: the time it takes for the sound to drop from its peak level to a sustain level;
 - Sustain: the level at which the sound remains while the note is held;
@@ -51,12 +50,12 @@ Envelope is used to shape and control how a sound velocity behaves. For this pro
 ![alt text](public/assets/rm_top.png)
 
 ## Recorder 
-If you want to export a result to your favourite DAW or just show what you did to your friends, there's a Recorder made just for you! Hit record and then export. Light and simple.
+If you want to export your results to your favorite DAW or share your work with friends, there's a Recorder made just for you! Simply hit record, then export. Light and simple.
 
 ![alt text](public/assets/rm_recorder.png)
 
 ## Effects
-On the bottom part of the page is located the Effect Rack.
+At the bottom of the page is the Effect Rack.
 The knobs presented control a combination of multiple simple effects, like reverb, delay, distortion, etc...
 The composite effects created until now are:
 - Vintage (Low-pass, Bitcrusher, Reverb), for a lo-fi analog vibe;
@@ -66,15 +65,14 @@ The composite effects created until now are:
 
 ![alt text](public/assets/rm_effects.png)
 
-Docs:
-https://react-dropzone.js.org/
-https://wavesurfer.xyz/docs/
-
-
 ## Dependencies 
 - Tone.js
 - Next.js
 - React + Node.js
 - Wavesurfer library
 - Firebase 
+
+## Docs
+https://react-dropzone.js.org/
+https://wavesurfer.xyz/docs/
 
