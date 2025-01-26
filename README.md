@@ -24,6 +24,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Cut the chatter, let's get to it
 There are two ways to begin exploring Fragmental. The first option involves using the dropzone, where you can upload your own sample to the synthesizer. If you doubt which sample to use, we recommend trying pads, sounds with smooth transitions or longer chords. If you prefer to dive right in or don’t have your own sample collection, no problem — you can pick one from the library!
 
+
 ![alt text](public/assets/rm_start_page.png)
 
 ## Hit play and let magic happen 
@@ -73,6 +74,6 @@ The composite effects created until now are:
 - Firebase 
 
 ## Docs
-https://react-dropzone.js.org/
-https://wavesurfer.xyz/docs/
+- https://react-dropzone.js.org/
+- https://wavesurfer.xyz/docs/
 
