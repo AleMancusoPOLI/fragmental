@@ -31,6 +31,19 @@ export default function Home() {
 
   return (
     <section className="section">
+      <div className="absolute top-4 right-4 text-slate-600 px-20 text-sm">
+        <p>Created by:</p>
+        <p>Alessandro Mancuso</p>
+        <p>Margarita Makurina</p>
+        <a
+          href="https://github.com/AleMancusoPOLI/fragmental"
+          className="font-semibold hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub repository
+        </a>{" "}
+      </div>
       <div className="items-center min-h-screen px-8 pb-20 gap-16 sm:px-20 sm:py-5 font-[family-name:var(--font-geist-sans)]">
         <p className="text-center font-bold text-slate-800">FRAGMENTAL</p>
         <p className="text-center font-thin">
