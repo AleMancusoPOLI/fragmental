@@ -1,12 +1,23 @@
+## Contents
+- [What is Fragmental?](#what-is-fragmental)
+- [Run Fragmental on the web](#if-you-want-to-run-fragmental-on-the-web)
+- [Run Fragmental locally](#if-you-want-to-run-fragmental-locally)
+- [What is Granular Synthesis?](#what-is-granular-synthesis)
+- [Getting Started](#cut-the-chatter-lets-get-to-it)
+- [Playback](#hit-play-and-let-magic-happen)
+- [Knobs Rack](#knobs-rack)
+- [Envelope](#envelope)
+- [Recorder](#recorder)
+- [Effects](#effects)
+- [Dependencies](#dependencies)
+
 ## What is Fragmental?
 Fragmental is a web-based granular synthesizer that allows users to explore granular synthesis creatively without requiring deep technical knowledge.
 
-## What is granular synthesis?
-Granular synthesis is a sound processing technique that involves splitting audio into small 'grains' and manipulating them to create new textures, tones, and effects. It's widely used in music production and sound design.
+## If you want to run Fragmental on the web
+https://fragmental.netlify.app/
 
-![alt text](public/assets/rm_screen.png)
-
-## If you want to run the app locally
+## If you want to run Fragmental locally
 
 Install the necessary dependencies (if needed):
 ```bash
@@ -20,6 +31,11 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## What is granular synthesis?
+Granular synthesis is a sound processing technique that involves splitting audio into small 'grains' and manipulating them to create new textures, tones, and effects. It's widely used in music production and sound design.
+
+![alt text](public/assets/rm_screen.png)
 
 ## Cut the chatter, let's get to it
 There are two ways to begin exploring Fragmental. The first option involves using the dropzone, where you can upload your own sample to the synthesizer. If you doubt which sample to use, we recommend trying pads, sounds with smooth transitions or longer chords. If you prefer to dive right in or don’t have your own sample collection, no problem — you can pick one from the library!
@@ -67,13 +83,9 @@ The composite effects created until now are:
 ![alt text](public/assets/rm_effects.png)
 
 ## Dependencies 
-- Tone.js
 - Next.js
 - React + Node.js
-- Wavesurfer library
-- Firebase 
-
-## Docs
-- https://react-dropzone.js.org/
-- https://wavesurfer.xyz/docs/
-
+- Firebase
+- Tone (https://tonejs.github.io/)
+- Wavesurfer (https://wavesurfer.xyz/docs/)
+- React-Dropzone (https://react-dropzone.js.org/)
